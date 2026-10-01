@@ -253,6 +253,7 @@
         <ul class="ticks">${ph.goal.map((g) => `<li>${esc(g)}</li>`).join('')}</ul><p class="muted small">${esc(ph.focus)}</p></section>
       <section class="card"><span class="eyebrow">Próximos hitos</span>
         <ol class="miles">${miles.map((m) => `<li class="mile mile-${m.kind}"><span class="mile-date num">${dShort(m.date)}</span><span>${esc(m.title)}</span></li>`).join('')}</ol></section>
+      <a class="card link-card wide-link" href="#fases">${ico('mountain')}<b>Fases del programa</b><span class="muted small">Qué ejercicios hay en cada fase y cómo cambian: piernas de esquiador y torso</span></a>
       <div class="grid-2">
         <a class="card link-card" href="#ski">${ico('mountain')}<b>Ski readiness</b><span class="muted small">Capacidades y avance</span></a>
         <a class="card link-card" href="#sabado">${ico('sun')}<b>Recovery Saturday</b><span class="muted small">Opciones suaves</span></a>
@@ -306,9 +307,102 @@
       }
       body += '</div></div><div class="legend"><span><i class="dot kind-gym"></i>Gimnasio</span><span><i class="dot kind-kb"></i>Kettlebell</span><span><i class="dot kind-recovery"></i>Recuperación</span><span><i class="dot kind-rest"></i>Descanso</span><span>✓ Completado</span></div>';
     }
-    view().innerHTML = `<header class="page-head"><h1 class="display">Calendario</h1>
-      <div class="seg" role="tablist"><button role="tab" class="${calMode === 'week' ? 'on' : ''}" data-act="cal-mode" data-mode="week">Semana</button><button role="tab" class="${calMode === 'month' ? 'on' : ''}" data-act="cal-mode" data-mode="month">Mes</button></div></header>${body}`;
+    view().innerHTML = `<header class="page-head"><h1 class="display">Calendario</h1>${calSeg(calMode)}</header>${body}`;
   }
+
+
+  /* ---------- fases ---------- */
+  const PHASE_STORY = {
+    1: { legs: 'Base de fuerza: cuádriceps, isquios y glúteo con bajada lenta, unilateral con apoyo y equilibrio estático.', torso: 'Máquinas y mancuernas a 10–12 reps para recuperar volumen de trabajo en pecho, espalda y hombros.' },
+    2: { legs: 'Más carga y unilateral sin apoyo. Desde la semana 8 entran aterrizajes y desplazamientos laterales: ventana para regresar al box.', torso: 'Mancuernas y lagartijas a 8–10 reps con más series para ganar músculo.' },
+    3: { legs: 'Excéntricos de 4 s (esquiar es frenar con las piernas), búlgaras, Copenhagen, equilibrio dinámico y primeros saltos.', torso: 'Fuerza real a 6–8 reps: press, remo, jalón y Turkish get-up.' },
+    4: { legs: 'Específico de esquí: trabajo lateral, desaceleración, saltos laterales y resistencia en postura de esquí.', torso: 'Mantener la fuerza a 6–8 reps y core anti-rotación para estabilidad en la pista.' },
+    5: { legs: 'Puesta a punto: mismos patrones con menos volumen para llegar fresco al viaje.', torso: 'Volumen bajo para conservar lo ganado sin cansarte.' }
+  };
+  const LEG_TAGS = ['quads', 'hams', 'glutes'];
+  const LATERAL = ['lateral_step_down', 'lateral_step_up', 'lateral_lunge', 'ski_hold', 'band_lateral_walk', 'monster_walk', 'band_abduction', 'copenhagen', 'hip_abductor', 'hip_adductor', 'side_lying_raise'];
+  const LEG_PATTERNS = ['Rodilla · cuádriceps', 'Cadera · isquios y glúteo', 'Unilateral', 'Lateral y postura de esquí', 'Equilibrio y control', 'Dinámico · esquí', 'Pantorrilla y tobillo', 'Acondicionamiento'];
+  const TORSO_PATTERNS = ['Empuje · pecho', 'Tirón · espalda', 'Hombros', 'Brazos', 'Core y cargas'];
+  function patternOf(e) {
+    const t = e.tags, first = t[0];
+    if (e.auth) return 'Dinámico · esquí';
+    if (e.id.startsWith('bike')) return 'Acondicionamiento';
+    if (LATERAL.includes(e.id)) return 'Lateral y postura de esquí';
+    if (t.includes('balance') && !t.some((x) => LEG_TAGS.includes(x))) return 'Equilibrio y control';
+    if (e.uni && t.some((x) => LEG_TAGS.includes(x))) return 'Unilateral';
+    if (first === 'hams' || first === 'glutes') return 'Cadera · isquios y glúteo';
+    if (first === 'quads') return 'Rodilla · cuádriceps';
+    if (first === 'calves') return 'Pantorrilla y tobillo';
+    if (first === 'chest' || first === 'triceps' && t.includes('chest')) return 'Empuje · pecho';
+    if (first === 'back') return 'Tirón · espalda';
+    if (first === 'shoulders') return 'Hombros';
+    if (first === 'biceps' || first === 'triceps') return 'Brazos';
+    return 'Core y cargas';
+  }
+  const phaseCache = {};
+  function phaseExercises(n) {
+    if (phaseCache[n]) return phaseCache[n];
+    const ph = PROG.PHASES[n - 1], map = new Map();
+    for (let d = ph.start; d <= ph.end; d = PROG.addDays(d, 1)) {
+      const s = PROG.session(d);
+      if (!isWorkout(s)) continue;
+      PROG.allItems(s).forEach((it) => {
+        let r = map.get(it.id);
+        if (!r) { r = { id: it.id, days: new Set(), first: d, peak: d, type: it.type, rx: it.rx, peakKg: -1 }; map.set(it.id, r); }
+        r.days.add(DOW3[s.dow]);
+        const l = PROG.loadFor(it.id, d, it.type);
+        if (l && l.kg > r.peakKg) { r.peakKg = l.kg; r.peak = d; r.type = it.type; }
+      });
+    }
+    return (phaseCache[n] = map);
+  }
+  let phaseSel = (PROG.phaseOf(T) || PROG.PHASES[0]).n;
+  function pxCard(r, n, isNew) {
+    const e = EX.BY[r.id];
+    const a = PROG.loadFor(r.id, r.first, r.type), b = PROG.loadFor(r.id, r.peak, r.type);
+    const load = a ? (a.kg === b.kg ? a.label : `${a.kg} → ${b.kg} kg · ${a.lb} → ${b.lb} lb`) : '';
+    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'].filter((x) => r.days.has(x)).join(', ');
+    return `<button class="px" data-act="ex" data-id="${r.id}"><span class="item-thumb">${thumb(r.id)}</span><span><b>${esc(e.n)}${isNew ? `<span class="badge-new${e.auth ? ' badge-dyn' : ''}">${e.auth ? 'Dinámico' : 'Nuevo'}</span>` : ''}</b>
+      <span class="muted small">${esc(days)} · ${esc(r.rx.s + ' × ' + r.rx.r)}</span>${load ? `<span class="small load-txt">${esc(load)}</span>` : ''}</span></button>`;
+  }
+  function trackHTML(n, patterns, icon, title, lead) {
+    const cur = phaseExercises(n), prev = n > 1 ? phaseExercises(n - 1) : null;
+    let html = `<section class="card"><div class="track-head">${ico(icon)}<h2>${title}</h2></div><p class="small track-lead">${esc(lead)}</p>`;
+    patterns.forEach((pat) => {
+      const list = [...cur.values()].filter((r) => patternOf(EX.BY[r.id]) === pat);
+      if (!list.length) return;
+      html += `<div class="pat"><div class="pat-name">${pat}</div>${list.map((r) => pxCard(r, n, prev && !prev.has(r.id))).join('')}</div>`;
+    });
+    if (prev) {
+      const gone = [...prev.keys()].filter((id) => !cur.has(id) && patterns.includes(patternOf(EX.BY[id])));
+      if (gone.length) html += `<p class="gone"><b>Sale de la rutina:</b> ${gone.map((id) => esc(EX.BY[id].n)).join(', ')}</p>`;
+    }
+    return html + '</section>';
+  }
+  function evolutionHTML(patterns) {
+    return patterns.map((pat) => {
+      const steps = PROG.PHASES.map((ph) => {
+        const names = [...phaseExercises(ph.n).values()].filter((r) => patternOf(EX.BY[r.id]) === pat).map((r) => EX.BY[r.id].n);
+        return `<span class="num">F${ph.n}</span><span>${names.length ? esc(names.slice(0, 4).join(' · ')) + (names.length > 4 ? ` +${names.length - 4}` : '') : '<span class="muted">—</span>'}</span>`;
+      }).join('');
+      return `<div class="evo-row"><b>${pat}</b><div class="evo-steps">${steps}</div></div>`;
+    }).join('');
+  }
+  function renderPhases() {
+    const n = phaseSel, ph = PROG.PHASES[n - 1], story = PHASE_STORY[n], nowN = (PROG.phaseOf(T) || {}).n;
+    const rxM = { 1: '10–12', 2: '8–10', 3: '6–8', 4: '5–6', 5: '5' }[n];
+    view().innerHTML = `<header class="page-head"><h1 class="display">Calendario</h1>${calSeg('phases')}</header>
+      <div class="phase-tabs">${PROG.PHASES.map((p) => `<button class="${p.n === n ? 'on' : ''}${p.n === nowN ? ' now' : ''}" data-act="phase" data-n="${p.n}"><b>F${p.n}</b><span>${esc(p.short)}</span></button>`).join('')}</div>
+      <section class="card phase-hero"><span class="eyebrow">Fase ${n} · ${dShort(ph.start)} – ${dShort(ph.end)}</span><h2>${esc(ph.name)}</h2>
+        <ul class="ticks">${ph.goal.map((g) => `<li>${esc(g)}</li>`).join('')}</ul>
+        <div class="rx-chips"><span class="chip">Principales ${rxM} reps</span><span class="chip">${esc(ph.focus.split('·').slice(-1)[0].trim())}</span>${n === 2 ? '<span class="chip chip-accent">Semana 8: dinámico</span>' : ''}</div></section>
+      ${trackHTML(n, LEG_PATTERNS, 'mountain', 'Piernas · plan de esquiador', story.legs)}
+      ${trackHTML(n, TORSO_PATTERNS, 'weight', 'Torso · físico', story.torso)}
+      <section class="card"><h2>Cómo cambia cada patrón</h2><p class="muted small">De F1 a F5: los ejercicios se vuelven más unilaterales, más pesados y más parecidos al esquí.</p>
+        <h3>Piernas</h3><div class="evo">${evolutionHTML(LEG_PATTERNS)}</div>
+        <h3>Torso</h3><div class="evo">${evolutionHTML(TORSO_PATTERNS)}</div></section>`;
+  }
+  const calSeg = (mode) => `<div class="seg" role="tablist"><button role="tab" class="${mode === 'week' ? 'on' : ''}" data-act="cal-mode" data-mode="week">Semana</button><button role="tab" class="${mode === 'month' ? 'on' : ''}" data-act="cal-mode" data-mode="month">Mes</button><button role="tab" class="${mode === 'phases' ? 'on' : ''}" data-act="cal-mode" data-mode="phases">Fases</button></div>`;
 
   /* ---------- día / today's workout ---------- */
   const isLegUni = (ex) => ex.uni && ex.tags.some((t) => ['quads', 'hams', 'glutes'].includes(t));
@@ -540,14 +634,14 @@
     if (name === 'dia' && arg) return { name: 'day', date: arg };
     if (name === 'ejercicio' && arg) return { name: 'library', ex: arg };
     if (!name || name === 'hoy') return { name: 'day', date: T };
-    return { name: { inicio: 'home', calendario: 'calendar', ejercicios: 'library', progreso: 'progress', ski: 'ski', sabado: 'saturday', ajustes: 'settings' }[name] || 'day', date: T };
+    return { name: { inicio: 'home', calendario: 'calendar', fases: 'phases', ejercicios: 'library', progreso: 'progress', ski: 'ski', sabado: 'saturday', ajustes: 'settings' }[name] || 'day', date: T };
   }
   let lastHash = null;
   function render() {
     route = parseRoute();
     const same = lastHash === location.hash, y = window.scrollY;
-    ({ home: renderHome, calendar: renderCalendar, day: () => renderDay(route.date), library: renderLibrary, progress: renderProgress, ski: renderSki, saturday: renderSaturday, settings: renderSettings })[route.name]();
-    const tab = route.name === 'day' ? (route.date === T ? 'today' : 'calendar') : route.name;
+    ({ home: renderHome, calendar: renderCalendar, phases: renderPhases, day: () => renderDay(route.date), library: renderLibrary, progress: renderProgress, ski: renderSki, saturday: renderSaturday, settings: renderSettings })[route.name]();
+    const tab = route.name === 'day' ? (route.date === T ? 'today' : 'calendar') : route.name === 'phases' ? 'calendar' : route.name;
     document.querySelectorAll('.tabbar a').forEach((a) => a.classList.toggle('on', a.dataset.r === tab));
     if (route.ex) showExercise(route.ex);
     window.scrollTo(0, same ? y : 0);
@@ -580,7 +674,10 @@
     else if (a === 'timer') startTimer(+t.dataset.sec);
     else if (a === 'timer-stop') stopTimer();
     else if (a === 'timer-add') timerEnd += 15000;
-    else if (a === 'cal-mode') { calMode = t.dataset.mode; renderCalendar(); }
+    else if (a === 'cal-mode') {
+      if (t.dataset.mode === 'phases') { if (location.hash !== '#fases') location.hash = '#fases'; else renderPhases(); }
+      else { calMode = t.dataset.mode; if (location.hash !== '#calendario') location.hash = '#calendario'; else renderCalendar(); }
+    } else if (a === 'phase') { phaseSel = +t.dataset.n; renderPhases(); window.scrollTo(0, 0); }
     else if (a === 'cal-prev' || a === 'cal-next') {
       const dir = a === 'cal-next' ? 1 : -1;
       if (calMode === 'week') calCursor = PROG.addDays(calCursor, 7 * dir);
