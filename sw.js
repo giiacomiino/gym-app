@@ -1,5 +1,5 @@
 /* Service worker: la app abre sin señal (shell en caché) y las fuentes se guardan al primer uso. */
-const CACHE = 'gymapp-v2';
+const CACHE = 'gymapp-v3';
 const SHELL = ['./', 'index.html', 'figures.js', 'exercises.js', 'program.js', 'app.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

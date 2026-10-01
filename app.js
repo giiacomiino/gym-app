@@ -394,7 +394,7 @@
     const dow = PROG.parse(T).getDay();
     let d = PROG.addDays(T, (6 - dow + 7) % 7);
     if (!PROG.inProgram(d)) d = '2026-10-03';
-    view().innerHTML = `<header class="page-head"><p class="eyebrow">${dLong(d)}</p><h1 class="display">Recovery Saturday</h1><p class="muted">Bicicleta suave, caminata, movilidad, recuperación o ejercicios de fisio.</p></header>` + recoveryBody(d);
+    view().innerHTML = `<header class="page-head"><p class="eyebrow">${dLong(d)}</p><h1 class="display">Recovery Saturday</h1><p class="muted">Bicicleta suave, caminata, full body ligero con KB, movilidad o ejercicios de fisio.</p></header>` + recoveryBody(d);
   }
 
   /* ---------- biblioteca ---------- */
@@ -435,7 +435,7 @@
       ${frames}
       ${item ? `<div class="rx-box"><div><span class="eyebrow">${dLong(date)}</span><b>${esc(rxParts(item.rx, ex).join(' · '))}</b><span class="muted small">Descanso ${esc(item.rx.rest || '—')}</span></div>${load ? `<div class="rx-load"><span class="eyebrow">Sugerido</span><b class="num">${esc(load.label)}</b></div>` : ''}</div>` : ''}
       ${series.length > 1 ? `<section class="card"><span class="eyebrow">Pesos sugeridos en el programa</span>${lineChart({ series: [{ name: ex.n, cls: 'accent', points: series, marks: true }], unit: ' kg', height: 150 })}
-        <p class="muted small">Calculado para ${PROG.getProfile().weight} kg. Si el RPE queda arriba del objetivo, baja un escalón; si queda muy fácil, sube uno. ${isLegUni(ex) ? 'Usa el mismo peso en ambas piernas y empieza con la izquierda.' : ''}</p></section>`
+        <p class="muted small">Calculado para ${PROG.getProfile().weight} kg (gráfica en kg; 1 kg = 2.2 lb). Si el RPE queda arriba del objetivo, baja un escalón; si queda muy fácil, sube uno. ${isLegUni(ex) ? 'Usa el mismo peso en ambas piernas y empieza con la izquierda.' : ''}</p></section>`
         : !item && loadNow ? `<div class="rx-box"><div><span class="eyebrow">Peso sugerido de referencia</span><b class="num">${esc(loadNow.label)}</b></div></div>` : ''}
       ${ex.why ? `<section class="why"><span class="eyebrow">Por qué es útil para tu objetivo</span><p>${esc(ex.why)}</p></section>` : ''}
       <dl class="howto">
@@ -482,7 +482,7 @@
       </div>
       <section class="card"><h3 class="flush">Sesiones por semana</h3>${weekBars()}</section>
       <section class="card"><h2>Pesos sugeridos</h2>
-        <p class="muted small">Para ${p.weight} kg y ${(p.height / 100).toFixed(2)} m. El punto grande es tu peso de esta semana; los puntos pequeños, sesiones que ya completaste. Las bajadas son descargas y la puesta a punto de febrero.</p>
+        <p class="muted small">Para ${p.weight} kg y ${(p.height / 100).toFixed(2)} m. Gráficas en kg (1 kg = 2.2 lb; en cada ejercicio ves ambos). El punto grande es tu peso de esta semana; los puntos pequeños, sesiones que ya completaste. Las bajadas son descargas y la puesta a punto de febrero.</p>
         ${charts}</section>
       <section class="card"><h3 class="flush">Cómo se calculan</h3><p class="small">Cada ejercicio parte de un porcentaje conservador de tu peso corporal para 10–12 reps con RPE 6–7. La carga sube ~2.5% por semana en octubre y da un salto cada vez que bajan las reps: noviembre (8–10), diciembre (6–8) y enero (5–6). Baja en las semanas de descarga y en febrero. Las máquinas cambian de una marca a otra: si una serie se siente más pesada que el RPE objetivo, quédate en el peso anterior.</p></section>`;
   }

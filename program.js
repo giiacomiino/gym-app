@@ -103,11 +103,11 @@
       finisher: [S('F', 'iso', { 1: ['spanish_squat'], 4: ['ski_hold'], 5: [] })]
     },
     2: {
-      kind: 'kb', title: 'Kettlebell + core + estabilidad A', sub: 'Bisagra, sentadilla goblet, cargas y equilibrio',
+      kind: 'kb', title: 'Full body kettlebell A', sub: 'Una KB + banda: bisagra, sentadilla, empuje, tirón, core y equilibrio',
       blocks: [
-        ['A', S('A1', 'kb', { 1: ['kb_deadlift'], 2: ['kb_rdl'], 5: ['kb_deadlift'] }), S('A2', 'kb', { 1: ['kb_halo'], 2: ['hk_kb_press', 'kb_halo'] })],
+        ['A', S('A1', 'kb', { 1: ['kb_deadlift'], 2: ['kb_rdl'], 5: ['kb_deadlift'] }), S('A2', 'kb', { 1: ['sa_kb_floor_press', 'push_up'], 2: ['hk_kb_press', 'push_up'] })],
         ['B', S('B1', 'kb', { 1: ['goblet_squat'], 3: ['goblet_squat', 'lateral_lunge'], 4: ['lateral_lunge', 'goblet_squat'], 5: ['goblet_squat'] }), S('B2', 'kb', { 1: ['kb_row'] })],
-        ['C', S('C1', 'stab', { 1: ['sl_balance_reach', 'star_excursion'], 2: ['star_excursion', 'y_balance'], 3: ['y_balance', 'star_excursion'], 4: ['y_balance', 'unstable_balance'], 5: ['y_balance'] }), S('C2', 'core', { 1: ['pallof', 'hk_pallof'] })],
+        ['C', S('C1', 'stab', { 1: ['sl_balance_reach', 'star_excursion'], 2: ['star_excursion', 'y_balance'], 3: ['y_balance', 'star_excursion'], 4: ['y_balance', 'unstable_balance'], 5: ['y_balance'] }), S('C2', 'core', { 1: ['pallof', 'kb_halo'] }, 'Pallof con banda anclada a un poste.')],
         ['D', S('D1', 'carry', { 1: ['kb_suitcase'] }), S('D2', 'core', { 1: ['dead_bug', 'side_plank'], 2: ['side_plank', 'bird_dog'], 3: ['side_plank', 'bear_plank'], 5: ['bird_dog'] })]
       ],
       finisher: [S('F1', 'small', { 1: ['tib_raise'] }), S('F2', 'small', { 1: ['ankle_eversion', 'ankle_inversion'] })],
@@ -124,14 +124,14 @@
       finisher: [S('F', 'stab', { 1: ['sl_balance'], 2: ['sl_balance_reach'], 3: ['unstable_balance', 'sl_balance_reach'], 5: ['sl_balance'] })]
     },
     4: {
-      kind: 'kb', title: 'Kettlebell + core + estabilidad B', sub: 'Unilateral, control excéntrico y anti-rotación',
+      kind: 'kb', title: 'Full body kettlebell B', sub: 'Una KB + banda: unilateral, empuje, tirón y anti-rotación',
       blocks: [
-        ['A', S('A1', 'uni', { 1: ['sl_rdl'] }, 'Pierna izquierda primero.'), S('A2', 'kb', { 1: ['kb_floor_press'], 2: ['sa_kb_floor_press', 'kb_floor_press'] })],
-        ['B', S('B1', 'uni', { 1: ['step_down'], 2: ['step_down', 'reverse_step_down'], 3: ['step_down', 'lateral_step_down'], 4: ['lateral_step_down', 'step_down'], 5: ['step_down'] }, 'Calidad sobre altura: rodilla alineada.'), S('B2', 'small', { 1: ['kb_chest_pass', 'straight_arm_pd'] })],
-        ['C', S('C1', 'stab', { 1: ['band_lateral_walk', 'monster_walk'], 2: ['monster_walk', 'band_abduction'], 3: ['band_abduction', 'band_lateral_walk'] }), S('C2', 'core', { 1: ['cable_chop', 'cable_lift'] })],
-        ['D', S('D1', 'carry', { 1: ['kb_farmer', 'kb_front_rack'], 2: ['kb_front_rack', 'kb_farmer'] }), S('D2', 'core', { 1: ['bird_dog', 'bear_plank'], 2: ['bear_plank', 'kb_atw'], 3: ['tgu'], 5: ['bird_dog'] }, null)]
+        ['A', S('A1', 'uni', { 1: ['sl_rdl'] }, 'Pierna izquierda primero.'), S('A2', 'kb', { 1: ['push_up', 'sa_kb_floor_press'], 2: ['sa_kb_floor_press', 'hk_kb_press'] })],
+        ['B', S('B1', 'uni', { 1: ['step_down'], 2: ['step_down', 'reverse_step_down'], 3: ['step_down', 'lateral_step_down'], 4: ['lateral_step_down', 'step_down'], 5: ['step_down'] }, 'Sirve cualquier escalón. Calidad sobre altura: rodilla alineada.'), S('B2', 'kb', { 1: ['kb_row', 'kb_chest_pass'] })],
+        ['C', S('C1', 'stab', { 1: ['band_lateral_walk', 'monster_walk'], 2: ['monster_walk', 'band_abduction'], 3: ['band_abduction', 'band_lateral_walk'] }), S('C2', 'core', { 1: ['kb_atw', 'kb_chest_pass'], 3: ['kb_atw', 'kb_halo'] })],
+        ['D', S('D1', 'carry', { 1: ['kb_front_rack', 'kb_suitcase'] }), S('D2', 'core', { 1: ['bird_dog', 'bear_plank'], 2: ['bear_plank', 'dead_bug_w'], 3: ['tgu'], 5: ['bird_dog'] })]
       ],
-      finisher: [S('F', 'iso', { 1: ['side_plank'], 2: ['copenhagen'], 3: ['ski_hold'], 5: [] }, null)],
+      finisher: [S('F', 'iso', { 1: ['side_plank'], 2: ['copenhagen'], 3: ['ski_hold'], 5: [] })],
       ski: { 4: [S('E1', 'uni', { 4: ['lateral_lunge'] }), S('E2', 'stab', { 4: ['unstable_balance'] })], 5: [S('E1', 'stab', { 5: ['sl_balance_reach'] })] }
     },
     5: {
@@ -176,7 +176,7 @@
     rope_pushdown: [0.25, 'm'], cable_tri_ext: [0.25, 'm'], oh_cable_ext: [0.2, 'm'], db_oh_ext: [0.16, 'd1'],
     kb_floor_press: [0.16, 'k2'], sa_kb_floor_press: [0.21, 'k'], kb_halo: [0.1, 'k'], kb_atw: [0.16, 'k'], kb_chest_pass: [0.1, 'k'], hk_kb_press: [0.16, 'k'],
     kb_suitcase: [0.26, 'k'], kb_farmer: [0.26, 'k2'], kb_front_rack: [0.16, 'k'], dead_bug_w: [0.06, 'k'],
-    pallof: [0.13, 'm'], hk_pallof: [0.13, 'm'], cable_chop: [0.13, 'm'], cable_lift: [0.13, 'm'],
+    cable_chop: [0.13, 'm'], cable_lift: [0.13, 'm'],
     tgu: [0.1, 'k'], kb_swing: [0.21, 'k'], kb_clean: [0.16, 'k'], kb_clean_press: [0.12, 'k']
   };
   const KB_SIZES = [4, 6, 8, 10, 12, 14, 16, 18, 20, 24, 28, 32];
@@ -205,8 +205,10 @@
     if (!L) return null;
     const g = growth(date), soft = SOFT[type] != null ? SOFT[type] : 1;
     const kg = roundLoad(PROFILE.weight * L[0] * (1 + (g - 1) * soft), L[1]);
-    const label = L[1] === 'd' || L[1] === 'k2' ? `${kg} kg c/u` : L[1] === 'k' ? `KB ${kg} kg` : L[1] === 'b' ? `${kg} kg (barra incluida)` : `${kg} kg`;
-    return { kg, label, kind: L[1] };
+    const lb = Math.max(5, Math.round((kg * 2.20462) / 5) * 5);
+    const each = L[1] === 'd' || L[1] === 'k2' ? ' c/u' : '';
+    const label = (L[1] === 'k' ? 'KB ' : '') + `${kg} kg · ${lb} lb${each}` + (L[1] === 'b' ? ' (con barra)' : '');
+    return { kg, lb, label, kind: L[1] };
   }
 
   const WARMUP = {
@@ -360,6 +362,7 @@
   const RECOVERY = [
     { id: 'bike', name: 'Bicicleta suave', dose: '20–40 min · RPE 3–4', desc: 'Pedaleo cómodo, podrías conversar. Ayuda a la movilidad y la recuperación de la rodilla.' },
     { id: 'walk', name: 'Caminata', dose: '30–45 min', desc: 'Terreno plano o cuesta suave. Ritmo cómodo.' },
+    { id: 'kbflow', name: 'Full body ligero con kettlebell', dose: '20–25 min · RPE 4–5', desc: 'Circuito suave con una KB: KB deadlift ×10, goblet squat ×8, KB row ×8/lado, halo ×5/dirección y suitcase carry 20 m/lado. 2–3 vueltas sin prisa.' },
     { id: 'mobility', name: 'Movilidad', dose: '15–20 min', desc: 'Rutina abajo. Movimientos suaves, sin forzar rangos.' },
     { id: 'recovery', name: 'Recuperación', dose: 'Libre', desc: 'Foam roller suave en cuádriceps, glúteos y pantorrillas; estiramientos ligeros; buen descanso.' },
     { id: 'physio', name: 'Ejercicios de fisioterapia', dose: 'Según indicación', desc: 'Los ejercicios que tu fisio te haya prescrito. Anótalos para tener registro.' }
