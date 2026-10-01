@@ -674,7 +674,7 @@
       move: 'Extensión explosiva de cadera llevando la KB al rack sin que golpee el antebrazo.',
       mus: 'Glúteos, isquiotibiales, espalda, hombro',
       err: ['Jalar con el brazo', 'La KB golpea el antebrazo'],
-      safe: ['Movimiento explosivo: solo con autorización y técnica supervisada.'],
+      safe: ['Movimiento explosivo: desde la fase 4, con KB ligera y técnica impecable.'],
       reg: 'KB deadlift + rack sin impulso.', prog: 'Clean & press.',
       fig: { frames: [{ t: 60, l: [45, -18], r: [45, -18], la: [-10, -10], ra: [-10, -10] }, P(ST, { la: [6, 0], ra: [24, 165] })], props: [{ k: 'kb', h: 'r' }], guides: [{ k: 'arrow', j: 'rhand' }] }
     },
@@ -684,7 +684,7 @@
       move: 'Clean al rack, pausa y press por encima de la cabeza. Regresa al rack y luego entre las piernas.',
       mus: 'Cadena posterior, hombro, core',
       err: ['Arquear la espalda en el press'],
-      safe: ['Solo con autorización. Domina primero el press y el clean por separado.'],
+      safe: ['Domina primero el press y el clean por separado.'],
       reg: 'Half-kneeling KB press.', prog: 'Más peso.',
       fig: { frames: [{ t: 60, l: [45, -18], r: [45, -18], la: [-10, -10], ra: [-10, -10] }, P(ST, { la: [6, 0], ra: [24, 165] }), P(ST, { la: [6, 0], ra: [178, 178] })], props: [{ k: 'kb', h: 'r' }] }
     },
@@ -694,7 +694,7 @@
       move: 'Lleva la KB atrás entre las piernas y proyéctala al frente con una extensión explosiva de cadera hasta la altura del pecho.',
       mus: 'Glúteos, isquiotibiales, core',
       err: ['Sentadilla en vez de bisagra', 'Levantar con los brazos', 'Hiperextender la espalda arriba'],
-      safe: ['Movimiento balístico: SOLO con autorización de tu traumatólogo/fisioterapeuta.'],
+      safe: ['Balístico: empieza en la semana 8 con KB ligera; si la rodilla o la espalda molestan, cambia a KB deadlift.'],
       reg: 'KB deadlift o hip thrust.', prog: 'Más peso o swing a una mano.',
       fig: { frames: [{ t: 72, l: [22, -12], r: [22, -12], la: [-28, -30], ra: [-28, -30] }, P(ST, { la: [88, 90], ra: [88, 90] })], props: [{ k: 'kb', h: 'c' }], guides: [{ k: 'arrow', j: 'chand' }] }
     },
@@ -1165,7 +1165,7 @@
       move: 'Salta vertical y aterriza suave en media sentadilla, rodillas alineadas.',
       mus: 'Cuádriceps, glúteos, potencia',
       err: ['Aterrizar con rodillas hacia adentro', 'Aterrizaje rígido'],
-      safe: ['IMPACTO: solo con autorización y progresión indicada por tu fisio.'],
+      safe: ['Impacto: pocas reps, aterrizaje silencioso. Si algo molesta, haz la alternativa.'],
       reg: 'Sentadilla rápida sin salto.', prog: 'Saltos continuos.',
       fig: { frames: [{ t: 40, l: [80, -26], r: [80, -26], la: [-40, -30], ra: [-40, -30] }, { t: 0, l: [0, 0], r: [0, 0], lf: -40, rf: -40, la: [170, 170], ra: [170, 170], oy: -26 }] }
     },
@@ -1175,7 +1175,7 @@
       move: 'Baja rápido a postura atlética (media sentadilla) y "congela" la posición con rodillas alineadas.',
       mus: 'Cuádriceps excéntrico, control de desaceleración',
       err: ['Valgo', 'Peso en talones'],
-      safe: ['Desaceleración: solo con autorización.'],
+      safe: ['Empieza desde poca altura y con pausa para "congelar" cada aterrizaje.'],
       reg: 'Bajada lenta a postura atlética.', prog: 'Desde un escalón bajo.',
       fig: { frames: [P(ST, { lf: -40, rf: -40, la: [170, 170], ra: [170, 170] }), { t: 38, l: [62, -30], r: [62, -30], la: [-20, -10], ra: [-20, -10] }] }
     },
@@ -1185,7 +1185,7 @@
       move: 'Salta lateral a la otra pierna, aterriza suave y estabiliza 2 s antes del siguiente.',
       mus: 'Glúteo medio, cuádriceps, potencia lateral',
       err: ['Rodilla que colapsa al aterrizar'],
-      safe: ['Lateral rápido + impacto: SOLO con autorización. Empieza con distancias cortas y pausa.'],
+      safe: ['Distancias cortas y pausa de 2 s en cada aterrizaje antes de ir más lejos o más rápido.'],
       reg: 'Lateral step-down o paso lateral sin salto.', prog: 'Más distancia.',
       fig: { frames: [P(F, { t: 14, th: 0.8, l: [6, -4], r: [-20, -40], la: [30, 20], ra: [60, 30] }), P(F, { t: -14, th: 0.8, l: [20, 40], r: [6, -4], la: [60, 30], ra: [30, 20], ox: -60 })] }
     },
@@ -1195,7 +1195,7 @@
       move: 'Desplázate lateralmente con pasos rápidos sin cruzar los pies; frena y cambia de sentido.',
       mus: 'Glúteo medio, cuádriceps, agilidad',
       err: ['Cruzar los pies', 'Frenar con la rodilla hacia adentro'],
-      safe: ['Cambio de dirección: SOLO con autorización.'],
+      safe: ['Empieza lento y sube velocidad semana a semana. Frena con la rodilla alineada.'],
       reg: 'Banded lateral walk.', prog: 'Más velocidad.',
       fig: { frames: [P(F, { th: 0.82, l: [14, -6], r: [14, -6], la: [40, 20], ra: [40, 20] }), P(F, { th: 0.82, l: [26, -8], r: [4, -2], la: [40, 20], ra: [40, 20], ox: 20 })], anchor: 'rank' }
     },
@@ -1205,7 +1205,7 @@
       move: 'Salta al cajón y aterriza suave en media sentadilla. Baja caminando, nunca saltando.',
       mus: 'Potencia de piernas',
       err: ['Aterrizar rígido', 'Bajar saltando'],
-      safe: ['Impacto: solo con autorización.'],
+      safe: ['Cajón bajo; baja siempre caminando.'],
       reg: 'Step-up rápido.', prog: 'Cajón más alto.',
       fig: { frames: [{ t: 40, l: [80, -26], r: [80, -26], la: [-40, -30], ra: [-40, -30] }, { t: 30, l: [60, -26], r: [60, -26], la: [60, 30], ra: [60, 30], ox: 34, oy: -26 }], props: [{ k: 'box', at: 'lank', f: 1, dy: 2, w: 34 }] }
     }
@@ -1225,11 +1225,11 @@
   const TAG_ES = { quads: 'Cuádriceps', hams: 'Isquios', glutes: 'Glúteos', adductors: 'Aductores', abductors: 'Abductores', calves: 'Pantorrilla', core: 'Core', chest: 'Pecho', back: 'Espalda', shoulders: 'Hombros', biceps: 'Bíceps', triceps: 'Tríceps', stability: 'Estabilidad', balance: 'Equilibrio', kettlebell: 'KB', acl: 'LCA', ski: 'Esquí' };
 
   const AUTH = {
-    impact: 'Impacto / saltos',
+    impact: 'Saltos / impacto',
     run: 'Carrera',
     cod: 'Cambios de dirección',
-    explosive: 'Explosivos (swing, clean)',
-    lateral: 'Laterales rápidos'
+    explosive: 'Explosivo (swing, clean)',
+    lateral: 'Lateral rápido'
   };
 
   window.EX = { LIST, BY, TAGS, TAG_ES, AUTH };

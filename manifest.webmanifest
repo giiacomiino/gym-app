@@ -2,7 +2,7 @@
   "name": "ACL → SKI PREP",
   "short_name": "Ski Prep",
   "description": "Fuerza post-LCA y preparación para esquí · oct 2026 → 15 feb 2027",
-  "start_url": "./",
+  "start_url": "./#hoy",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",

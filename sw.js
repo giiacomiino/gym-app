@@ -1,6 +1,6 @@
 /* Service worker: la app abre sin señal (shell en caché) y las fuentes se guardan al primer uso. */
-const CACHE = 'aclski-v1';
-const SHELL = ['./', 'index.html', 'config.js', 'figures.js', 'exercises.js', 'program.js', 'app.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
+const CACHE = 'gymapp-v2';
+const SHELL = ['./', 'index.html', 'figures.js', 'exercises.js', 'program.js', 'app.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/icon-192.png', 'icons/icon-512.png', 'icons/apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
@@ -11,7 +11,6 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const url = new URL(e.request.url);
   if (e.request.method !== 'GET') return;
-  if (url.hostname.endsWith('supabase.co')) return; // datos: siempre a la red
   if (url.hostname.includes('fonts.g')) {
     e.respondWith(caches.open(CACHE).then(async (c) => {
       const hit = await c.match(e.request);
