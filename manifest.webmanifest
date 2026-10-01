@@ -1,0 +1,21 @@
+{
+  "name": "ACL → SKI PREP",
+  "short_name": "Ski Prep",
+  "description": "Fuerza post-LCA y preparación para esquí · oct 2026 → 15 feb 2027",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0f1b2a",
+  "theme_color": "#0f1b2a",
+  "lang": "es",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Today's workout", "short_name": "Hoy", "url": "./#hoy" },
+    { "name": "Calendario", "url": "./#calendario" }
+  ]
+}
