@@ -1,7 +1,7 @@
 /* exercises.js — biblioteca de ejercicios.
    tags: quads hams glutes adductors abductors calves core chest back shoulders
          biceps triceps stability balance kettlebell acl ski
-   auth: categoría que requiere autorización médica (impact, explosive, lateral, cod, run) */
+   auth: categoría dinámica de la ruta de impacto (impact, explosive, lateral, cod, run) */
 (function () {
   const P = (...a) => Object.assign({}, ...a);
   const ST = { t: 0, l: [0, 0], r: [0, 0] };
@@ -1158,7 +1158,172 @@
       fig: { frames: [{ t: 45, l: [70, -10], r: [95, 40], la: [70, 30], ra: [70, 30] }, { t: 45, l: [95, 40], r: [70, -10], la: [70, 30], ra: [70, 30] }], anchor: 'hip', fix: 74, props: [{ k: 'bike' }], speed: 700 }
     },
 
-    /* ---------------- REQUIERE AUTORIZACIÓN ---------------- */
+    /* ---------------- SIN EQUIPO (CASA) ---------------- */
+    {
+      id: 'pause_squat', n: 'Pause squat to chair', es: 'Sentadilla a silla con pausa', tags: ['quads', 'glutes', 'acl'], eq: 'Peso corporal', lvl: 1,
+      start: 'De pie frente a una silla firme, pies al ancho de cadera, brazos al frente.',
+      move: 'Baja en 4 s hasta rozar la silla, pausa 2 s sin sentarte y sube empujando el piso.',
+      mus: 'Cuádriceps, glúteos',
+      err: ['Dejarse caer sobre la silla', 'Rodillas hacia adentro', 'Subir con impulso'],
+      safe: ['La pausa sin sentarte es lo que hace que cueste sin peso.'],
+      reg: 'Silla más alta.', prog: 'Silla más baja, pausa de 3 s o pasa a split squat.',
+      fig: { frames: [P(ST, { la: [90, 90], ra: [90, 90] }), P(BOXSQ, { la: [90, 90], ra: [90, 90] })], props: [{ k: 'box', at: 'hip', f: 1, dx: -6, dy: 4, w: 30 }], guides: [{ k: 'arrow', j: 'hip' }] }
+    },
+    {
+      id: 'bw_split_squat', n: 'Bodyweight split squat', es: 'Split squat sin peso', tags: ['quads', 'glutes', 'acl', 'ski'], eq: 'Peso corporal', uni: true, lvl: 1,
+      start: 'Un pie adelante y otro atrás, a un paso largo de distancia, tronco erguido.',
+      move: 'Baja en 3–4 s hasta que la rodilla de atrás casi toque el piso y sube empujando con la pierna de adelante. Izquierda primero.',
+      mus: 'Cuádriceps, glúteo mayor, aductores',
+      err: ['Rodilla de adelante hacia adentro', 'Empujar con la pierna de atrás', 'Bajar rápido'],
+      safe: ['Sin peso, la intensidad sale del tempo lento y la pausa abajo.'],
+      reg: 'Apoyo con una mano en la pared.', prog: 'Búlgara en silla.',
+      fig: { from: 'split_squat', drop: ['db'] }
+    },
+    {
+      id: 'bw_bulgarian', n: 'Bodyweight Bulgarian split squat', es: 'Búlgara en silla sin peso', tags: ['quads', 'glutes', 'acl', 'ski', 'balance'], eq: 'Silla / sofá', uni: true, lvl: 2, sp: true,
+      start: 'Empeine de atrás sobre una silla o sofá, pie de adelante a un paso largo.',
+      move: 'Baja en 4 s, pausa 1 s abajo y sube con la pierna de adelante. Izquierda primero; la derecha iguala las reps.',
+      mus: 'Cuádriceps, glúteo mayor, estabilizadores de cadera',
+      err: ['Pie de adelante demasiado cerca', 'Rodilla que colapsa hacia adentro', 'Rebotar abajo'],
+      safe: ['Silla que no se mueva (contra la pared).'],
+      reg: 'Split squat sin peso.', prog: 'Tempo 5 s, pausa 2 s o una mochila con libros.',
+      why: 'Es el ejercicio de pierna sin equipo que más carga pone en el cuádriceps: casi todo tu peso sobre una pierna. Sustituye bien al leg press en días de casa.',
+      fig: { from: 'bulgarian_split_squat', drop: ['db'] }
+    },
+    {
+      id: 'bw_reverse_lunge', n: 'Bodyweight reverse lunge', es: 'Zancada atrás sin peso', tags: ['glutes', 'quads', 'ski'], eq: 'Peso corporal', uni: true, lvl: 1,
+      start: 'De pie, pies al ancho de cadera.',
+      move: 'Da un paso largo hacia atrás, baja controlado y regresa empujando con la pierna de adelante.',
+      mus: 'Glúteos, cuádriceps',
+      err: ['Paso corto', 'Tronco que se cae al frente'],
+      safe: ['Más amable con la rodilla que la zancada al frente.'],
+      reg: 'Split squat sin peso.', prog: 'Desde un escalón (déficit) o mochila.',
+      fig: { from: 'reverse_lunge', drop: ['db'] }
+    },
+    {
+      id: 'bw_step_up', n: 'Bodyweight step-up', es: 'Subida a escalón o silla sin peso', tags: ['quads', 'glutes', 'acl', 'ski'], eq: 'Escalón', uni: true, lvl: 1,
+      start: 'Pie completo de la pierna de trabajo sobre un escalón alto o una silla firme.',
+      move: 'Sube solo con la pierna de arriba, sin impulsarte con la de abajo. Baja en 3 s.',
+      mus: 'Cuádriceps, glúteo mayor y medio',
+      err: ['Impulso con la pierna de abajo', 'Rodilla hacia adentro'],
+      safe: ['Superficie estable; calidad antes que altura.'],
+      reg: 'Escalón más bajo.', prog: 'Más altura o bajada en 4 s.',
+      fig: { from: 'step_up', drop: ['db'] }
+    },
+    {
+      id: 'sissy_squat_assisted', n: 'Assisted sissy squat', es: 'Sissy squat asistida', tags: ['quads', 'acl'], eq: 'Marco de puerta', lvl: 2,
+      start: 'De pie junto al marco de una puerta, sujeto con una mano. Pies al ancho de cadera.',
+      move: 'Lleva las rodillas al frente y abajo mientras inclinas el cuerpo hacia atrás en línea recta (rodilla–cadera–hombro). Baja solo lo que controles y sube.',
+      mus: 'Cuádriceps (sobre todo el recto femoral), sin necesidad de peso',
+      err: ['Doblar la cadera (se vuelve sentadilla)', 'Bajar más de lo que controlas', 'Soltar el apoyo'],
+      safe: ['Carga mucho la parte de adelante de la rodilla: empieza con rango corto. Si molesta, cámbiala por wall sit.'],
+      reg: 'Rango corto o wall sit.', prog: 'Más rango o bajada en 4 s.',
+      why: 'Es lo más parecido a una extensión de rodilla sin máquina: aísla el cuádriceps con tu propio peso.',
+      fig: { frames: [P(ST, { la: [70, 70], ra: [10, 20] }), { t: -44, l: [44, -30], r: [44, -30], lf: -30, rf: -30, la: [120, 70], ra: [80, 110] }], anchor: 'ltoe', props: [{ k: 'post', at: 'lhand', f: 0, dx: 2 }], guides: [{ k: 'arrow', j: 'lknee' }] }
+    },
+    {
+      id: 'nordic_assisted', n: 'Assisted Nordic curl', es: 'Nórdico asistido', tags: ['hams', 'acl'], eq: 'Sofá o alguien que sujete', lvl: 3,
+      start: 'De rodillas sobre un cojín con los tobillos fijos bajo un sofá. Cuerpo recto de rodillas a cabeza.',
+      move: 'Déjate caer hacia adelante lo más lento posible frenando con los isquios; cuando no puedas frenar, apóyate con las manos y regresa ayudándote.',
+      mus: 'Isquiotibiales (excéntrico), glúteos',
+      err: ['Doblar la cadera', 'Caer rápido desde el inicio'],
+      safe: ['Muy exigente: empieza con rango corto. Los isquios protegen el LCA, pero se recuperan lento de este ejercicio.'],
+      reg: 'Slider curl con toalla o puente de isquios.', prog: 'Más rango antes de apoyar las manos.',
+      fig: { frames: [{ t: 0, l: [0, -90], r: [0, -90], la: [20, 150], ra: [20, 150] }, { t: 45, l: [-45, -90], r: [-45, -90], la: [70, 80], ra: [70, 80] }], anchor: 'lknee', fix: 47, props: [{ k: 'roll', at: 'lank', dy: -6 }], guides: [{ k: 'arrow', j: 'head' }] }
+    },
+    {
+      id: 'bw_sl_rdl', n: 'Bodyweight single-leg RDL', es: 'Peso muerto a una pierna sin peso', tags: ['hams', 'glutes', 'balance', 'stability', 'acl', 'ski'], eq: 'Peso corporal', uni: true, lvl: 2,
+      start: 'De pie sobre una pierna, rodilla ligeramente flexionada.',
+      move: 'Lleva la cadera atrás e inclina el tronco mientras la otra pierna sube atrás. Baja en 3 s y regresa apretando el glúteo. Pausa abajo de 1 s.',
+      mus: 'Isquios, glúteo, estabilizadores de tobillo y cadera',
+      err: ['Abrir la cadera', 'Redondear la espalda'],
+      safe: ['Un dedo en la pared al inicio si el equilibrio limita.'],
+      reg: 'Con apoyo en la pared.', prog: 'Mochila en la mano contraria o tempo 4 s.',
+      fig: { from: 'sl_rdl', drop: ['kb'] }
+    },
+    {
+      id: 'decline_push_up', n: 'Decline push-ups', es: 'Lagartijas con pies elevados', tags: ['chest', 'shoulders', 'triceps', 'core'], eq: 'Silla', lvl: 3,
+      start: 'Manos en el piso un poco más abiertas que los hombros, pies sobre una silla, cuerpo en línea.',
+      move: 'Baja el pecho cerca del piso en 2–3 s y empuja.',
+      mus: 'Pectoral superior, deltoides anterior, tríceps, core',
+      err: ['Cadera caída', 'Codos muy abiertos'],
+      safe: ['Sin carga para la rodilla.'],
+      reg: 'Lagartijas normales.', prog: 'Pausa abajo o tempo lento.',
+      fig: { frames: [{ t: 80, l: [-80, -80], r: [-80, -80], la: [0, 0], ra: [0, 0] }, { t: 88, l: [-88, -88], r: [-88, -88], la: [-70, 20], ra: [-70, 20] }], anchor: 'lhand', props: [{ k: 'box', at: 'ltoe', f: 0, dy: 1, w: 26 }], guides: [{ k: 'arrow', j: 'neck' }] }
+    },
+    {
+      id: 'pike_push_up', n: 'Pike push-ups', es: 'Lagartijas en pica (hombro)', tags: ['shoulders', 'triceps', 'core'], eq: 'Peso corporal', lvl: 2,
+      start: 'En V invertida: manos y pies en el piso, cadera arriba.',
+      move: 'Dobla los codos y baja la cabeza hacia el piso entre las manos; empuja de regreso.',
+      mus: 'Deltoides, tríceps, trapecio',
+      err: ['Bajar la cadera (se vuelve lagartija)', 'Codos muy abiertos'],
+      safe: ['Rango que controles; la cabeza nunca golpea el piso.'],
+      reg: 'Manos en una silla.', prog: 'Pies sobre una silla.',
+      fig: { frames: [{ t: 150, l: [-35, -35], r: [-35, -35], la: [60, 60], ra: [60, 60] }, { t: 165, l: [-30, -30], r: [-30, -30], la: [-60, 50], ra: [-60, 50] }], anchor: 'ltoe', guides: [{ k: 'arrow', j: 'head' }] }
+    },
+    {
+      id: 'chair_dip', n: 'Chair dips', es: 'Fondos en silla', tags: ['triceps', 'chest', 'shoulders'], eq: 'Silla', lvl: 1,
+      start: 'Manos en el borde de una silla firme detrás de ti, cadera fuera del asiento, rodillas a 90°.',
+      move: 'Dobla los codos hasta ~90° bajando la cadera y empuja de regreso.',
+      mus: 'Tríceps, pectoral, deltoides anterior',
+      err: ['Bajar demasiado (molestia en hombro)', 'Codos hacia afuera'],
+      safe: ['Rango corto si el hombro molesta.'],
+      reg: 'Pies más cerca.', prog: 'Piernas estiradas.',
+      fig: { frames: [{ t: 0, l: [80, 0], r: [80, 0], la: [-12, -12], ra: [-12, -12] }, { t: 2, l: [96, 10], r: [96, 10], la: [-70, 0], ra: [-70, 0] }], anchor: 'lhand', props: [{ k: 'bench', at: 'lhand', f: 0, dy: 1, w: 28, dx: -10 }], guides: [{ k: 'arrow', j: 'hip' }] }
+    },
+    {
+      id: 'table_row', n: 'Inverted table row', es: 'Remo invertido bajo una mesa', tags: ['back', 'biceps', 'core'], eq: 'Mesa firme', lvl: 2, sp: true,
+      start: 'Acostado bajo una mesa firme y pesada, manos en el borde, talones en el piso y cuerpo recto.',
+      move: 'Jala el pecho hacia el borde de la mesa juntando escápulas, pausa 1 s y baja en 3 s.',
+      mus: 'Dorsal, romboides, trapecio medio, bíceps',
+      err: ['Cadera caída', 'Jalar con el cuello'],
+      safe: ['Comprueba antes que la mesa no se voltea ni se desliza.'],
+      reg: 'Rodillas dobladas (más fácil).', prog: 'Piernas estiradas o pausa de 2 s arriba.',
+      why: 'Es el tirón horizontal sin equipo más parecido a un remo con peso. Sin él, una semana de casa se queda sin espalda.',
+      fig: { frames: [{ t: -64, l: [64, 64], r: [64, 64], la: [174, 174], ra: [174, 174] }, { t: -48, l: [48, 48], r: [48, 48], la: [215, 140], ra: [215, 140] }], anchor: 'lank', props: [{ k: 'bench', at: 'lhand', f: 0, dy: -2, w: 46, dx: 4 }], guides: [{ k: 'arrow', j: 'neck' }] }
+    },
+    {
+      id: 'towel_row', n: 'Door towel row', es: 'Remo con toalla en la puerta', tags: ['back', 'biceps'], eq: 'Toalla + puerta', lvl: 1,
+      start: 'Toalla alrededor de la manija de una puerta cerrada (del lado que cierra hacia ti). Pies cerca de la puerta, cuerpo inclinado atrás con brazos estirados.',
+      move: 'Jala el cuerpo hacia la puerta llevando los codos atrás, pausa y regresa lento.',
+      mus: 'Dorsal, romboides, bíceps',
+      err: ['Doblar la cadera', 'Soltar rápido'],
+      safe: ['Puerta bien cerrada y manija firme.'],
+      reg: 'Más vertical.', prog: 'Pies más cerca de la puerta (más inclinado) o a un brazo.',
+      fig: { frames: [{ t: -26, l: [26, 26], r: [26, 26], la: [104, 104], ra: [104, 104] }, { t: -12, l: [12, 12], r: [12, 12], la: [-50, 80], ra: [-50, 80] }], anchor: 'lank', props: [{ k: 'post', at: 'lhand', f: 0, dx: 6 }], guides: [{ k: 'arrow', j: 'neck' }] }
+    },
+    {
+      id: 'prone_ytw', n: 'Prone Y-T-W', es: 'Y-T-W boca abajo', tags: ['shoulders', 'back'], eq: 'Peso corporal', lvl: 1,
+      start: 'Boca abajo, frente apoyada en una toalla, pulgares hacia arriba.',
+      move: 'Despega los brazos del piso formando una Y (arriba), luego una T (a los lados) y luego una W (codos atrás). Pausa 2 s en cada letra.',
+      mus: 'Trapecio medio e inferior, deltoides posterior, manguito rotador',
+      err: ['Levantar la cabeza', 'Encoger hombros'],
+      safe: ['Rango pequeño y controlado.'],
+      reg: 'Solo Y y T.', prog: 'Pausas de 3 s o botellas de agua en las manos.',
+      fig: { frames: [{ t: 88, l: [-92, -92], r: [-92, -92], la: [95, 95], ra: [95, 95] }, { t: 86, l: [-92, -92], r: [-92, -92], la: [108, 108], ra: [108, 108] }, { t: 86, l: [-92, -92], r: [-92, -92], la: [-150, 120], ra: [-150, 120] }], labels: ['Brazos al frente en el piso', 'Y: despega los brazos', 'W: codos atrás, aprieta escápulas'], anchor: 'hip', fix: 7 }
+    },
+    {
+      id: 'superman', n: 'Superman', es: 'Superman', tags: ['back', 'glutes', 'core'], eq: 'Peso corporal', lvl: 1,
+      start: 'Boca abajo con brazos estirados al frente.',
+      move: 'Despega brazos, pecho y piernas a la vez unos centímetros, pausa 2 s y baja.',
+      mus: 'Erectores de la columna, glúteos, trapecio',
+      err: ['Hiperextender el cuello', 'Rebotar'],
+      safe: ['Poco rango, mucha pausa.'],
+      reg: 'Solo brazos o solo piernas.', prog: 'Pausas de 3–5 s.',
+      fig: { frames: [{ t: 90, l: [-90, -90], r: [-90, -90], la: [92, 92], ra: [92, 92] }, { t: 84, l: [-98, -98], r: [-98, -98], la: [104, 104], ra: [104, 104] }], anchor: 'hip', fix: 7 }
+    },
+    {
+      id: 'towel_curl', n: 'Towel curl', es: 'Curl con toalla (autorresistencia)', tags: ['biceps'], eq: 'Toalla', uni: true, lvl: 1,
+      start: 'Sentado en una silla, toalla bajo un pie, sujeta los extremos con una mano.',
+      move: 'Haz un curl de bíceps mientras el pie empuja hacia abajo para dar resistencia. Sube en 2 s, baja en 3 s resistiendo.',
+      mus: 'Bíceps, braquial',
+      err: ['Que el pie no ponga resistencia', 'Mover el hombro'],
+      safe: ['Tú controlas la carga: esfuerzo alto, sin tirones.'],
+      reg: 'Menos resistencia del pie.', prog: 'Pausa isométrica de 3 s a 90°.',
+      fig: { frames: [P(SEAT, { la: [8, 8], ra: [8, 8] }), P(SEAT, { la: [8, 150], ra: [8, 150] })], anchor: 'hip', fix: 46, props: [seat, { k: 'band', a: 'lhand', b: 'lank' }], guides: [{ k: 'arrow', j: 'lhand' }] }
+    },
+
+    /* ---------------- DINÁMICO (ruta de impacto) ---------------- */
     {
       id: 'squat_jump', n: 'Squat jump', es: 'Salto desde sentadilla', tags: ['quads', 'glutes', 'ski'], eq: 'Peso corporal', lvl: 3, auth: 'impact',
       start: 'Media sentadilla con brazos atrás.',
@@ -1208,9 +1373,163 @@
       safe: ['Cajón bajo; baja siempre caminando.'],
       reg: 'Step-up rápido.', prog: 'Cajón más alto.',
       fig: { frames: [{ t: 40, l: [80, -26], r: [80, -26], la: [-40, -30], ra: [-40, -30] }, { t: 30, l: [60, -26], r: [60, -26], la: [60, 30], ra: [60, 30], ox: 34, oy: -26 }], props: [{ k: 'box', at: 'lank', f: 1, dy: 2, w: 34 }] }
+    },
+
+    /* ---------------- RUTA DE IMPACTO (carrera, cuerda y saltos) ---------------- */
+    {
+      id: 'a_skip', n: 'Walking A-skip', es: 'Skips A caminando', tags: ['calves', 'quads', 'ski'], eq: 'Peso corporal', unit: 'dist', lvl: 1,
+      start: 'De pie, tronco alto.',
+      move: 'Camina subiendo una rodilla a la altura de la cadera mientras te paras en la punta del otro pie; brazos coordinados como al correr. Sin saltar.',
+      mus: 'Flexores de cadera, pantorrilla, coordinación de carrera',
+      err: ['Inclinarse hacia atrás', 'Caer sobre el talón'],
+      safe: ['Sin impacto: prepara la técnica de carrera antes de trotar.'],
+      reg: 'Marcha con rodillas altas en el lugar.', prog: 'Skips con un pequeño salto (desde la etapa 1).',
+      fig: { frames: [{ t: 0, l: [0, 0], r: [0, 0], la: [20, 40], ra: [-20, 20] }, { t: -3, l: [88, 4], r: [0, 0], rf: -30, la: [-35, 10], ra: [45, 110] }], anchor: 'rtoe' }
+    },
+    {
+      id: 'fast_calf', n: 'Fast calf raises', es: 'Elevación de talones rápida', tags: ['calves', 'ski'], eq: 'Peso corporal', lvl: 1,
+      start: 'De pie, una mano en la pared.',
+      move: 'Sube a puntas rápido y baja controlado, sin despegar del piso. Ritmo constante.',
+      mus: 'Pantorrilla, tendón de Aquiles',
+      err: ['Rebotar los talones', 'Doblar las rodillas'],
+      safe: ['Prepara el tobillo y el Aquiles para los saltitos y la carrera.'],
+      reg: 'Más lento.', prog: 'A una pierna o pogos (etapa 1).',
+      fig: { frames: [P(ST, { la: [40, 60] }), P(ST, { lf: -40, rf: -40, la: [40, 60] })], anchor: 'ltoe', guides: [{ k: 'arrow', j: 'head' }] }
+    },
+    {
+      id: 'pogo', n: 'Pogo hops', es: 'Pogos (saltitos de tobillo)', tags: ['calves', 'ski'], eq: 'Peso corporal', lvl: 2, auth: 'impact',
+      start: 'De pie, pies al ancho de cadera, rodillas casi estiradas.',
+      move: 'Saltitos pequeños y rápidos rebotando con los tobillos, casi sin doblar rodillas. Contacto corto y silencioso.',
+      mus: 'Pantorrilla, tendón de Aquiles, rigidez reactiva',
+      err: ['Doblar mucho las rodillas', 'Aterrizar en talones', 'Saltos muy altos'],
+      safe: ['Primer contacto con el impacto: altura mínima, superficie firme y nada de dolor al día siguiente.'],
+      reg: 'Elevación de talones rápida.', prog: 'Más tiempo o a una pierna (etapa 3).',
+      fig: { frames: [P(ST, { lf: -25, rf: -25, la: [10, 30], ra: [10, 30] }), P(ST, { lf: -45, rf: -45, oy: -9, la: [10, 30], ra: [10, 30] })], anchor: 'ltoe', speed: 450 }
+    },
+    {
+      id: 'jump_rope', n: 'Jump rope', es: 'Cuerda a dos pies', tags: ['calves', 'ski', 'stability'], eq: 'Cuerda (o imaginaria)', unit: 'time', lvl: 2, auth: 'impact',
+      start: 'De pie, codos pegados, cuerda detrás de los talones.',
+      move: 'Gira la cuerda con las muñecas y salta solo lo necesario para que pase, aterrizando en la punta del pie.',
+      mus: 'Pantorrilla, coordinación, resistencia',
+      err: ['Saltos altos', 'Aterrizar en talones', 'Girar con los brazos'],
+      safe: ['Sin cuerda funciona igual: gira las manos como si la tuvieras.'],
+      reg: 'Pogos sin cuerda.', prog: 'Alternando pies o más tiempo.',
+      fig: { frames: [P(F, { la: [28, 50], ra: [28, 50], lf: -20, rf: -20 }), P(F, { la: [28, 50], ra: [28, 50], oy: -9 })], anchor: 'ltoe', props: [{ k: 'rope' }], speed: 450 }
+    },
+    {
+      id: 'jump_rope_alt', n: 'Jump rope · alternate feet', es: 'Cuerda alternando pies', tags: ['calves', 'ski', 'stability'], eq: 'Cuerda (o imaginaria)', unit: 'time', lvl: 3, auth: 'run',
+      start: 'Igual que la cuerda a dos pies.',
+      move: 'Alterna los pies como si trotaras en el lugar: un pie por cada vuelta de cuerda.',
+      mus: 'Pantorrilla, coordinación de carrera',
+      err: ['Rodillas muy altas', 'Ritmo irregular'],
+      safe: ['Cada pie recibe todo el impacto: es el puente entre saltar y correr.'],
+      reg: 'Cuerda a dos pies.', prog: 'Más ritmo o más tiempo.',
+      fig: { frames: [{ t: 2, l: [22, -24], r: [0, 0], rf: -25, la: [10, 60], ra: [10, 60] }, { t: 2, l: [0, 0], lf: -25, r: [22, -24], la: [10, 60], ra: [10, 60] }], anchor: 'hip', fix: 86, props: [{ k: 'rope' }], speed: 420 }
+    },
+    {
+      id: 'walk_run', n: 'Walk–run intervals', es: 'Trote–caminata', tags: ['quads', 'calves', 'ski'], eq: 'Caminadora o calle plana', unit: 'time', lvl: 2, auth: 'run',
+      start: 'Caminadora o superficie plana. 5 min de caminata para empezar.',
+      move: 'Alterna 1 min de trote suave (podrías platicar) con 1 min de caminata. El timer marca los cambios.',
+      mus: 'Cuádriceps, pantorrilla, sistema cardiovascular',
+      err: ['Trotar rápido', 'Zancada larga cayendo en el talón'],
+      safe: ['Pasos cortos y cadencia alta. Si la rodilla molesta al día siguiente, repite esta etapa.'],
+      reg: 'Más caminata.', prog: 'Trote continuo (etapa 2).',
+      why: 'Correr es lo que tu rodilla aún no ha hecho. Hacerlo en bloques cortos le da tiempo a tendones y cartílago de adaptarse al impacto repetido sin sobrecargarlos.',
+      fig: { frames: [{ t: 8, l: [32, -14], r: [-22, -72], la: [-35, 45], ra: [35, 120] }, { t: 8, l: [-22, -72], r: [32, -14], la: [35, 120], ra: [-35, 45] }], anchor: 'hip', fix: 82, speed: 520 }
+    },
+    {
+      id: 'easy_run', n: 'Easy run', es: 'Trote continuo', tags: ['quads', 'calves', 'ski'], eq: 'Caminadora o calle plana', unit: 'time', lvl: 2, auth: 'run',
+      start: 'Superficie plana. 5 min de caminata antes.',
+      move: 'Trote suave continuo a ritmo de conversación. Cadencia alta, pasos cortos.',
+      mus: 'Cuádriceps, pantorrilla, resistencia aeróbica',
+      err: ['Ir más rápido de lo indicado', 'Bajadas pronunciadas'],
+      safe: ['Plano primero; las bajadas cargan mucho más la rodilla.'],
+      reg: 'Trote–caminata.', prog: 'Intervalos (etapa 3).',
+      fig: { from: 'walk_run' }
+    },
+    {
+      id: 'run_intervals', n: 'Run intervals', es: 'Intervalos de carrera', tags: ['quads', 'calves', 'ski'], eq: 'Caminadora o calle plana', unit: 'time', lvl: 3, auth: 'run',
+      start: '5–8 min de trote suave para calentar.',
+      move: 'Alterna tramos rápidos (RPE 7–8) con tramos suaves según el timer. Termina con 5 min suaves.',
+      mus: 'Cuádriceps, glúteos, capacidad anaeróbica',
+      err: ['Sprint máximo', 'Frenar en seco'],
+      safe: ['Rápido, no máximo. Aceleras y desaceleras progresivamente.'],
+      reg: 'Trote continuo.', prog: 'Más repeticiones.',
+      why: 'Un día de esquí son muchas bajadas cortas e intensas con pausas. Los intervalos entrenan justo eso: esfuerzo alto, recuperarte y repetir.',
+      fig: { from: 'walk_run' }
+    },
+    {
+      id: 'lateral_hop', n: 'Lateral line hops', es: 'Saltos laterales a dos pies', tags: ['calves', 'ski', 'abductors', 'stability'], eq: 'Línea en el piso', lvl: 2, auth: 'lateral',
+      start: 'Pies juntos a un lado de una línea, rodillas suaves.',
+      move: 'Salta de un lado al otro de la línea con los dos pies, aterrizando suave y con rodillas alineadas.',
+      mus: 'Pantorrilla, glúteo medio, control lateral',
+      err: ['Rodillas que se juntan al aterrizar', 'Saltos demasiado amplios'],
+      safe: ['Empieza con pausa en cada aterrizaje; luego encadena.'],
+      reg: 'Pogos en el lugar.', prog: 'Ski hops (etapa 4).',
+      fig: { frames: [P(F, { th: 0.9, l: [6, -4], r: [6, -4], la: [30, 30], ra: [30, 30] }), P(F, { l: [2, 0], r: [2, 0], la: [40, 40], ra: [40, 40], ox: 14, oy: -10 }), P(F, { th: 0.9, l: [6, -4], r: [6, -4], la: [30, 30], ra: [30, 30], ox: 28 })], anchor: 'lank', speed: 500 }
+    },
+    {
+      id: 'sl_hop_place', n: 'Single-leg pogo', es: 'Saltitos en una pierna', tags: ['calves', 'quads', 'ski', 'stability'], eq: 'Peso corporal', uni: true, lvl: 3, auth: 'impact',
+      start: 'Sobre una pierna, rodilla suave, la otra doblada atrás.',
+      move: 'Saltitos pequeños en el lugar con una pierna. Izquierda primero; la derecha iguala las reps.',
+      mus: 'Pantorrilla, cuádriceps, estabilidad de rodilla',
+      err: ['Rodilla que se va hacia adentro', 'Saltos altos'],
+      safe: ['Altura mínima. Si la izquierda se siente insegura, quédate en saltos a dos pies.'],
+      reg: 'Pogos a dos pies.', prog: 'Salto en una pierna con freno.',
+      fig: { frames: [P(ST, { r: [10, -60], lf: -20, la: [10, 40], ra: [10, 40] }), P(ST, { r: [10, -60], lf: -40, oy: -8, la: [10, 40], ra: [10, 40] })], anchor: 'ltoe', speed: 480 }
+    },
+    {
+      id: 'sl_hop_stick', n: 'Single-leg hop & stick', es: 'Salto en una pierna con freno', tags: ['quads', 'glutes', 'ski', 'stability', 'balance'], eq: 'Peso corporal', uni: true, lvl: 3, auth: 'impact', sp: true,
+      start: 'Sobre una pierna en media sentadilla.',
+      move: 'Salta hacia adelante con la misma pierna y aterriza en ella, congelando la posición 3 s con la rodilla alineada.',
+      mus: 'Cuádriceps excéntrico, glúteo, control de aterrizaje',
+      err: ['Aterrizar con la rodilla hacia adentro', 'Tocar con el otro pie', 'Rebotar'],
+      safe: ['Distancia corta. La calidad del aterrizaje vale más que la distancia.'],
+      reg: 'Salto a dos pies con aterrizaje en una.', prog: 'Más distancia o saltos encadenados.',
+      why: 'Es una de las pruebas clásicas de regreso al deporte: muestra si la rodilla operada aguanta y frena igual que la sana.',
+      fig: { frames: [{ t: 30, l: [50, -24], r: [20, -70], la: [-30, -10], ra: [-30, -10] }, { t: 12, l: [12, -10], r: [12, -70], la: [80, 100], ra: [80, 100], ox: 26, oy: -14 }, { t: 30, l: [50, -24], r: [20, -70], la: [40, 40], ra: [40, 40], ox: 52 }], labels: ['Carga en una pierna', 'Salto al frente', 'Aterriza y congela 3 s'], anchor: 'lank' }
+    },
+    {
+      id: 'lateral_sl_hop', n: 'Lateral single-leg hop & stick', es: 'Salto lateral en una pierna con freno', tags: ['glutes', 'quads', 'ski', 'stability', 'abductors'], eq: 'Peso corporal', uni: true, lvl: 3, auth: 'lateral',
+      start: 'Sobre una pierna en postura atlética.',
+      move: 'Salta de lado con la misma pierna y aterriza en ella, congelando 2–3 s. Regresa igual.',
+      mus: 'Glúteo medio, cuádriceps, control lateral de rodilla',
+      err: ['Rodilla que colapsa hacia adentro', 'Tronco que se cae al lado'],
+      safe: ['Distancia corta al inicio; es el gesto más parecido al canto del esquí.'],
+      reg: 'Skater bounds con pausa.', prog: 'Más distancia o encadenados.',
+      fig: { frames: [P(F, { t: 12, th: 0.82, l: [6, -4], r: [-20, -40], la: [30, 20], ra: [60, 30] }), P(F, { t: 4, l: [4, 0], r: [-20, -40], la: [50, 30], ra: [50, 30], ox: -22, oy: -12 }), P(F, { t: 12, th: 0.82, l: [6, -4], r: [-20, -40], la: [30, 20], ra: [60, 30], ox: -44 })], anchor: 'lank' }
+    },
+    {
+      id: 'ski_hops', n: 'Ski hops', es: 'Saltos de lado a lado en postura de esquí', tags: ['quads', 'ski', 'abductors', 'stability'], eq: 'Línea en el piso', unit: 'time', lvl: 3, auth: 'lateral', sp: true,
+      start: 'Pies juntos en postura de esquí (rodillas y cadera flexionadas, manos al frente) a un lado de una línea.',
+      move: 'Salta de lado a lado de la línea sin subir de postura, como encadenando curvas cortas. Ritmo constante el tiempo indicado.',
+      mus: 'Cuádriceps (isométrico + reactivo), glúteo medio, pantorrilla',
+      err: ['Pararte entre saltos', 'Rodillas que se juntan'],
+      safe: ['Empieza con saltos pequeños; si la técnica se rompe, termina la serie.'],
+      reg: 'Saltos laterales a dos pies con pausa.', prog: 'Saltos sobre un objeto bajo o más tiempo.',
+      why: 'Es lo más parecido a esquiar que puedes hacer en el piso: postura flexionada sostenida mientras las piernas absorben y empujan de lado a lado.',
+      fig: { frames: [P(F, { t: 0, th: 0.8, l: [-4, 16], r: [-4, 16], la: [40, 60], ra: [40, 60], ox: -16 }), P(F, { t: 0, th: 0.86, l: [-2, 10], r: [-2, 10], la: [40, 60], ra: [40, 60], oy: -10 }), P(F, { t: 0, th: 0.8, l: [-4, 16], r: [-4, 16], la: [40, 60], ra: [40, 60], ox: 16 })], anchor: 'lank', speed: 420 }
+    },
+    {
+      id: 'jump_turn_90', n: '90° jump turns', es: 'Saltos con giro de 90°', tags: ['quads', 'ski', 'stability', 'core'], eq: 'Peso corporal', lvl: 3, auth: 'cod',
+      start: 'Pies al ancho de cadera en postura atlética.',
+      move: 'Salta girando 90° en el aire y aterriza suave, congelando 1–2 s. Alterna el sentido del giro.',
+      mus: 'Cuádriceps, core anti-rotación, control de aterrizaje',
+      err: ['Girar con la rodilla en el aterrizaje', 'Aterrizar rígido'],
+      safe: ['El giro se hace en el aire; los pies aterrizan ya orientados.'],
+      reg: 'Saltos sin giro.', prog: 'Giro de 180°.',
+      fig: { frames: [P(F, { th: 0.82, l: [10, -10], r: [10, -10], la: [30, 40], ra: [30, 40] }), P(F, { l: [2, 0], r: [2, 0], la: [150, 150], ra: [150, 150], oy: -14 }), { t: 30, l: [60, -30], r: [60, -30], la: [40, 30], ra: [40, 30] }], labels: ['Postura atlética de frente', 'Salta y gira en el aire', 'Aterriza de lado y congela'], anchor: 'lank' }
     }
   ];
 
+  // variantes que reutilizan la figura de otro ejercicio, sin el implemento ({ from, drop })
+  const byId = Object.fromEntries(LIST.map((e) => [e.id, e]));
+  LIST.forEach((e) => {
+    if (!e.fig.from) return;
+    const src = byId[e.fig.from].fig, drop = e.fig.drop || [];
+    e.fig = Object.assign({}, src, { props: (src.props || []).filter((p) => !drop.includes(p.k)) });
+    delete e.fig._prep;
+  });
   LIST.forEach((e) => {
     e.unit = e.unit || 'reps';
     e.q = yt(e.n + ' exercise technique');

@@ -25,7 +25,11 @@ App web personal (PWA) de entrenamiento de Giacomo para **terminar de rehabilita
 ## 3. Preferencias de Giacomo para esta app (importante)
 
 - **"Que vaya al día":** la app abre directo en el entrenamiento de hoy (`#hoy`, también ruta por defecto). Se re-sincroniza la fecha si la app queda abierta de un día a otro.
-- **NO quiere registrar datos** (peso/reps/RPE/pruebas/semáforo). Solo quiere **llevar la rutina** (palomitas por ejercicio y sesión) y **ver su avance**. Se eliminaron el tracker, las pruebas, el formulario del semáforo y Supabase.
+- **No quiere un tracker** (series/reps/RPE capturados). Sí aceptó (14 oct 2026) **un toque por ejercicio** (Fácil / Bien / Pesado / Molestia, en todos los ejercicios) y corregir opcionalmente el peso usado, para que la rutina **se ajuste a su avance real**. Las pruebas de la ruta de impacto son de un toque (pasa / no), sin números.
+- Quiere ser **atleta completo**: piernas listas para el viaje (idealmente desde fines de enero) **y** torso completo (pecho, espalda, hombros, bíceps, tríceps). El cuádriceps es su prioridad. **No hacía los finishers** → se eliminaron como bloque aparte.
+- Quiere **alternativas** cuando no puede ir al gym: en casa **no tiene ningún equipo** (solo peso corporal, silla, mesa, toalla, puerta).
+- Siente **más cansada la pierna derecha** con los mismos pesos (probable compensación en bilaterales / inhibición del cuádriceps izquierdo): se agregó "+1 serie izquierda" en cuádriceps unilateral.
+- Aún **sin luz verde para trotar** (oct 2026); la etapa 1 de impacto incluye esa luz verde en su prueba.
 - **No quiere un flujo centrado en autorizaciones del doctor.** Se quitaron los toggles de autorización; el trabajo dinámico entra por calendario (semana 8) con una alternativa por ejercicio.
 - Quiere **pesos sugeridos** en **kg y lb** (su gym tiene máquinas en ambas unidades).
 - Martes y jueves (los "días de movilidad/estabilidad") deben ser **full body con una kettlebell** (+ banda + peso corporal), sin máquinas.
@@ -43,18 +47,19 @@ HTML/JS estático, **sin build ni dependencias**. Todo corre en el navegador.
 | `exercises.js` | **Biblioteca de 114 ejercicios** (`window.EX = { LIST, BY, TAGS, TAG_ES, AUTH }`). Cada uno: `id, n` (nombre), `es` (nombre en español), `tags`, `eq`, `uni`, `unit` (`reps/time/dist/cm`), `lvl`, `sp` (especial ⭐), `auth` (categoría dinámica: impact/explosive/lateral/cod), `start, move, mus, err[], safe[], reg, prog, why?`, `fig` (keyframes + props), `q` (URL de búsqueda en YouTube). |
 | `program.js` | **El programa**: fases, plantillas semanales, rotación, prescripciones, trabajo dinámico, **pesos sugeridos**, hitos, readiness, opciones de sábado. Expone `window.PROG`. |
 | `app.js` | UI: router por hash, vistas, checkboxes en `localStorage`, gráficas SVG hechas a mano, temporizador de descanso, sheet de ejercicio con animación. |
-| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v4`. |
+| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v5`. |
 | `manifest.webmanifest` | PWA (start_url `./#hoy`, standalone, íconos). |
 | `icons/` | `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (generados con Playwright desde el SVG). |
 | `.nojekyll` | Para que GitHub Pages sirva tal cual. |
 
 ### Estado guardado (solo en el celular)
-`localStorage['gymapp.v2'] = { checks: {fecha: {codigo: true}}, done: {fecha: true}, recovery: {fecha: {opcion: true}}, profile: {weight, height} }`.
+`localStorage['gymapp.v2'] = { checks: {fecha: {codigo: true}}, done: {fecha: true}, recovery: {fecha: {opcion: true}}, profile: {weight, height}, fb: {fecha: {codigo: {id, r: easy|ok|hard|pain, type, sug, kg?}}}, swaps: {idOriginal: {to, from: fecha}}, gates: {etapa: {checks: [bool], date}}, days: {fecha: {where: 'home', min: 20|30|45|60}}, rounds: {fecha: {bloque: n}} }`.
+`app.js` llama `PROG.setState(...)` (función `sync()`) tras cada cambio; `PROG.session(date)` = sesión base del calendario (`baseSession`, en caché) + personalización.
 Una sesión se marca como completada al tocar "Terminar sesión" o al palomear todos sus ejercicios. Sábado: completado si se marca alguna opción.
 
 ### Rutas (hash)
 `#hoy` / vacío → día de hoy · `#dia/YYYY-MM-DD` · `#inicio` · `#calendario` (Semana/Mes) · `#fases` · `#ejercicios` · `#ejercicio/<id>` · `#progreso` · `#ski` · `#sabado` · `#ajustes` (Perfil).
-Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejercicios · Progreso. Ski readiness, Recovery Saturday, Fases y Perfil se abren desde tarjetas en Inicio (Fases también desde Calendario).
+Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejercicios · Progreso. Ski readiness, Recovery Saturday, Fases, **Ruta de impacto (`#impacto`)** y Perfil se abren desde tarjetas en Inicio (Fases también desde Calendario).
 
 ## 5. El programa (program.js)
 
@@ -76,7 +81,7 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
   - **Dom** descanso.
 - **Rotación:** cada slot tiene un pool por fase (`{fase: [ids]}`, hereda de la fase anterior si no se define); rota **cada 2 semanas** (`wip = semana - semana de inicio de la fase`). Los ejercicios principales son fijos por fase para progresar carga.
 - **Prescripción:** `RX[tipo][fase]` con tipos `main, uni, acc, upper, small, kb, core, stab, cond`, más `iso`, `carry` (distancias) y tiempos según `unit` del ejercicio.
-- **Dinámico (desde semana 8, sin toggles):** `DYN[dow][etapa]` con etapas s1 (sem 8–9), s2 (10–14), s3 (15–18), s4 (19–20). Mar: snap-down → +squat jump → box jump bajo. Jue: KB swing → +skater bounds → KB clean. Vie: lateral shuffle → +squat jump (ene). Cada uno con **alternativa** (`alt`). Bloque con borde ámbar "Dinámico · desde la semana 8".
+- **(Histórico, reemplazado por la ruta de impacto §5b) Dinámico:** `DYN[dow][etapa]` con etapas s1 (sem 8–9), s2 (10–14), s3 (15–18), s4 (19–20). Mar: snap-down → +squat jump → box jump bajo. Jue: KB swing → +skater bounds → KB clean. Vie: lateral shuffle → +squat jump (ene). Cada uno con **alternativa** (`alt`). Bloque con borde ámbar "Dinámico · desde la semana 8".
 - **SKI PREP** (F3 vie, F4–F5 mar/jue/vie): lateral step-up, ski stance hold, lateral lunge, unstable balance, banded lateral walk.
 
 ### Pesos sugeridos (`LOADS`, `loadFor(id, date, type)`)
@@ -89,6 +94,17 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
 
 ### Hitos (MILESTONES)
 1 oct inicio · 30 oct revisión sugerida con fisio · 1 nov F2 · **12 nov ventana box (hasta 26 nov)** · **16 nov semana 8: dinámico** · 23 nov descarga · 1 dic F3 · 28 dic descarga · 1 ene F4 · 1 feb F5 · 10 feb evaluación final con traumatólogo/fisio · 15 feb viaje.
+
+## 5b. Personalización (14 oct 2026) — program.js
+- **Plantillas:** sin finishers. Lun D = isométrico de cuádriceps (Spanish squat / ski hold) + core + pantorrilla, C3 tríceps. Mié D1 = 2º cuádriceps (leg extension / reverse step-down), C3 bíceps, D3 core. Vie C3 bíceps, D3 hombro. Mar/Jue D3 tibial / plancha lateral-Copenhagen. Cada día de pierna ≥2 ejercicios de cuádriceps.
+- **`xl` "+1 serie izquierda"** en cuádriceps unilateral (reps), F1–F4, no en descarga.
+- **Duración:** `estimate(s)` (min, redondeo a 5). Sin elección se acota a `DEFAULT_MIN = 75`. Elegible 20/30/45/60. `trim()`: primero baja series de lo de baja prioridad (`keepScore`), luego quita ejercicios; siempre quedan el principal, ≥2 cuádriceps (1 en 20 min), ≥1 empuje y ≥1 tirón.
+- **Casa:** `HOME` mapa gym→sin equipo (primero no repetido), `homeOk(ex)` por `HOME_EQ`; `casaRx` = más reps + tempo lento, RPE 8, sin peso. Calentamiento `WARMUP.home`.
+- **Cambiar ejercicio (⇄):** en la ficha, candidatos del mismo `patternOf` (app.js); `ST.swaps[id] = {to, from}` aplica desde esa fecha; orden: casa → swap → escalera.
+- **Retroalimentación:** `adjState(id, date)` recorre respuestas previas: Fácil = ×1.08 sobre lo usado y mínimo un escalón (`nextUp`); Bien = sigue la curva desde lo usado (recalibra si corrigió el peso); Pesado = congela; 2 Pesados = −5 %; Molestia = −10 % + nota de regresión. `loadFor(id, date, type, plain)` (`plain` = plan original, para gráficas). Sin peso: `LADDERS` (2 Fácil → variante más difícil; Molestia o 2 Pesado → más fácil).
+- **Ruta de impacto:** `IMPACT` etapas 0 Preparar · 1 Primeros saltos (16 nov, o antes con luz verde: `early`) · 2 Correr (30 nov) · 3 Una pierna (28 dic) · 4 Esquí (18 ene) · Afinar (desde 1 feb, volumen a la mitad). `stageAt(date)`: hasta hoy avanza solo con prueba aprobada (`gates`); días futuros se planean por calendario. `IMP[etapa].pre` (después del calentamiento, mar/jue/vie) y `.post` (cardio del viernes: trote–caminata → trote 15–25 min → intervalos). Molestia en un ejercicio de impacto → su alternativa por 14 días. Reemplaza al viejo `DYN`.
+- **Timers (app.js):** segmentos con pitidos (Web Audio) en 3-2-1 y cambios, Wake Lock para que no se apague la pantalla. Botón "Vuelta n/N hecha" por bloque (arranca el descanso; en la última palomea el bloque). ▶ en ejercicios por tiempo (izquierda → cambio → derecha → descanso) e intervalos (`rx.iv = {on, off, n, onL, offL}`). En iPhone no suena con el interruptor de silencio ni con la pantalla bloqueada.
+- **30 ejercicios nuevos** (biblioteca = 144): casa (pause squat, split/búlgara/zancada/step-up/RDL a una pierna sin peso vía `fig: {from, drop}`, sissy asistida, nórdico asistido, lagartijas declinadas, pike, fondos en silla, remo bajo mesa, remo con toalla, Y-T-W, superman, curl con toalla) e impacto (A-skip, talones rápidos, pogos, cuerda, cuerda alternando, trote–caminata, trote, intervalos, saltos laterales, saltitos a una pierna, salto con freno, salto lateral a una pierna, ski hops, giros de 90°). Prop nuevo `rope` en figures.js.
 
 ## 6. Pantallas (app.js)
 
@@ -146,6 +162,7 @@ Galería de todas las figuras: crear un HTML temporal que cargue `figures.js` + 
 4. Quiso subirlo a JAX → se canceló para no mezclar; se creó el repo `gym-app`.
 5. Header sticky fuera; martes/jueves full body con KB; kg + lb.
 6. Header eliminado por completo (se encimaba con la barra de estado); módulo **Fases**.
+7. (14 oct 2026) Timers con sonido, modo Casa/duración/⇄, retroalimentación de un toque que ajusta pesos y variantes, ruta de impacto por etapas con pruebas, más cuádriceps y torso completo, sin finishers.
 
 ## 10. Ideas pendientes / posibles siguientes pasos (no pedidas aún)
 

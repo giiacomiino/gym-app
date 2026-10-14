@@ -137,7 +137,7 @@
     let s = '';
     const W = prep.W;
     for (const pr of spec.props || []) {
-      const back = !['kb', 'db', 'plate', 'band', 'roll', 'slider', 'platform'].includes(pr.k);
+      const back = !['kb', 'db', 'plate', 'band', 'roll', 'slider', 'platform', 'rope'].includes(pr.k);
       if ((layer === 'back') !== back) continue;
       if (pr.k === 'bench' || pr.k === 'box') {
         const a = resolveAt(pr, W), w = pr.w || 40;
@@ -183,6 +183,10 @@
       } else if (pr.k === 'slider') {
         const a = J[pr.at || 'lank'];
         s += `<rect x="${f1(a[0] - 6)}" y="-3" width="12" height="3" rx="1.5" class="fg-iron"/>`;
+      } else if (pr.k === 'rope') {
+        // cuerda para saltar: de mano a mano pasando bajo los pies
+        const a = J.lhand, b = J.rhand, y = Math.max(J.lank[1], J.rank[1]) + 6, cx = (J.lank[0] + J.rank[0]) / 2;
+        s += `<path d="M${f1(a[0])} ${f1(a[1])} C${f1(cx - 26)} ${f1(y + 4)} ${f1(cx + 26)} ${f1(y + 4)} ${f1(b[0])} ${f1(b[1])}" class="fg-band" fill="none"/>`;
       } else if (pr.k === 'platform') {
         const a = J[pr.at || 'lank'], n = pr.ang * RAD;
         const nx = Math.sin(n), ny = Math.cos(n), px = -ny, py = nx;

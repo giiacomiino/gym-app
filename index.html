@@ -431,9 +431,9 @@ th { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color:
 .file-btn input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 
 /* ---------- temporizador y toast ---------- */
-.timer { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(var(--tabbar) + 14px + env(safe-area-inset-bottom, 0px)); z-index: 35; display: flex; align-items: center; gap: 10px; background: var(--ink); color: var(--bg); border-radius: 16px; padding: 8px 8px 8px 16px; box-shadow: 0 10px 30px rgb(0 0 0 / .3); }
+.timer { position: fixed; left: 50%; transform: translateX(-50%); max-width: calc(100vw - 24px); bottom: calc(var(--tabbar) + 14px + env(safe-area-inset-bottom, 0px)); z-index: 35; display: flex; align-items: center; gap: 10px; background: var(--ink); color: var(--bg); border-radius: 16px; padding: 8px 8px 8px 16px; box-shadow: 0 10px 30px rgb(0 0 0 / .3); }
 .timer b { font-family: var(--font-display); font-size: 1.8rem; min-width: 76px; font-variant-numeric: tabular-nums; }
-.timer button { min-height: 40px; padding: 0 12px; border-radius: 10px; background: color-mix(in srgb, var(--bg) 18%, transparent); color: var(--bg); font-weight: 700; }
+.timer button { white-space: nowrap; min-height: 40px; padding: 0 12px; border-radius: 10px; background: color-mix(in srgb, var(--bg) 18%, transparent); color: var(--bg); font-weight: 700; }
 .toast { position: fixed; left: 16px; right: 16px; top: calc(70px + env(safe-area-inset-top, 0px)); z-index: 60; max-width: 520px; margin: 0 auto; background: var(--ink); color: var(--bg); border-radius: 12px; padding: 12px 14px; font-weight: 600; box-shadow: 0 10px 30px rgb(0 0 0 / .25); }
 .empty { text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center; }
 
@@ -517,6 +517,69 @@ th { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color:
   .lib-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   main { padding-top: 22px; }
 }
+/* ---------- sesión flexible, retroalimentación, timers y ruta de impacto ---------- */
+.item .fb-row { grid-column: 1 / -1; }
+.fb-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 10px 12px 12px; border-top: 1px solid var(--line); }
+.fb-q { font-size: .78rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); width: 100%; }
+.fb-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; flex: 1 1 260px; }
+.fb-b { min-height: 40px; border-radius: 10px; background: var(--surface-2); font-weight: 700; font-size: .86rem; }
+.fb-b.on { color: #fff; }
+.fb-easy.on { background: var(--ok); } .fb-ok.on { background: var(--right); } .fb-hard.on { background: var(--warn); } .fb-pain.on { background: var(--bad); }
+.fb-kg { display: flex; align-items: center; gap: 8px; }
+.fb-kg b { min-width: 62px; text-align: center; font-size: 1.15rem; }
+.icon-btn.sm { width: 36px; height: 36px; font-size: 1.2rem; border-radius: 10px; }
+.fb-hint { width: 100%; margin: 0; color: var(--muted); }
+.fb-sum { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0 4px; }
+.fb-sum div { display: flex; flex-direction: column; align-items: center; padding: 8px 4px; border-radius: 10px; background: var(--surface-2); border-top: 3px solid var(--line); }
+.fb-sum b { font-size: 1.5rem; line-height: 1; }
+.fb-sum .fb-easy { border-top-color: var(--ok); } .fb-sum .fb-ok { border-top-color: var(--right); } .fb-sum .fb-hard { border-top-color: var(--warn); } .fb-sum .fb-pain { border-top-color: var(--bad); }
+.tag-xl { background: var(--accent); color: var(--accent-ink); }
+.tag-home { background: var(--ok-soft); color: var(--ok); }
+.adj { font-size: .78rem; font-weight: 700; color: var(--muted); }
+.note-adj { font-style: normal; color: var(--ink); opacity: .75; }
+.go { width: 44px; height: 44px; border-radius: 12px; background: var(--ink); display: grid; place-items: center; }
+.go .ico { fill: var(--bg); stroke: var(--bg); width: 18px; height: 18px; }
+.rest-done { background: var(--ok-soft); color: var(--ok); }
+.rest-done .ico { stroke: var(--ok); }
+.day-opts { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px; }
+.opt-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.seg-2 { display: grid; grid-template-columns: 1fr 1fr; flex: 1 1 200px; max-width: 280px; }
+.seg-2 button { display: inline-flex; align-items: center; justify-content: center; gap: 5px; }
+.seg-2 .ico { width: 16px; height: 16px; }
+.dur-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.dur-chips .chipf { padding: 7px 11px; box-shadow: none; background: var(--surface-2); }
+.dur-chips .chipf.on { background: var(--ink); color: var(--bg); }
+.dur-chips .chipf:disabled { opacity: .35; cursor: default; }
+.opt-note { margin: 0; }
+.meta-strip .chip .ico { width: 14px; height: 14px; }
+.gate-card { border-left: 4px solid var(--warn); display: flex; flex-direction: column; gap: 6px; }
+.gate { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.gate > b { font-size: 1.1rem; }
+.gate-q { display: flex; gap: 10px; align-items: center; font-size: .92rem; }
+.gate-q.locked { opacity: .55; }
+.gate-ok .gate-q { opacity: .8; }
+.gate .pill { align-self: flex-start; margin: 0; }
+.stages { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; }
+.stage { background: var(--surface); border-radius: var(--r); box-shadow: var(--shadow); padding: 14px; border-left: 4px solid var(--line); }
+.stage.st-now { border-left-color: var(--accent); }
+.stage.st-done { border-left-color: var(--ok); }
+.stage-top { display: flex; gap: 10px; align-items: center; }
+.stage-top > div { display: flex; flex-direction: column; flex: 1; }
+.stage-top b { font-size: 1.1rem; }
+.stage-n { width: 30px; height: 30px; border-radius: 9px; background: var(--surface-2); display: grid; place-items: center; font-weight: 800; font-size: 1.05rem; flex: none; }
+.st-now .stage-n { background: var(--accent); color: var(--accent-ink); }
+.st-done .stage-n { background: var(--ok); color: #fff; }
+.swap-box summary { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: center; cursor: pointer; list-style: none; }
+.swap-box summary::-webkit-details-marker { display: none; }
+.swap-box summary .ico { stroke: var(--accent); grid-row: span 2; }
+.swap-box summary .small { grid-column: 2; }
+.swap-list { margin-top: 12px; }
+.swap-box .btn { margin-top: 12px; }
+a.banner { text-decoration: none; }
+.timer-txt { display: flex; flex-direction: column; line-height: 1.05; min-width: 96px; }
+.timer-txt span { font-size: .72rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; opacity: .8; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.timer[data-k="work"] { background: var(--accent); color: var(--accent-ink); }
+.timer[data-k="work"] button { color: var(--accent-ink); background: color-mix(in srgb, var(--accent-ink) 16%, transparent); }
 @media (max-width: 370px) {
   .hero .display { font-size: 2.6rem; }
   .item-main { grid-template-columns: 64px 1fr; }
@@ -538,7 +601,7 @@ th { font-size: .72rem; text-transform: uppercase; letter-spacing: .08em; color:
 
 <div id="scrim" class="scrim" hidden></div>
 <div id="sheet" class="sheet" hidden role="dialog" aria-modal="true"><div id="sheet-body" class="sheet-body"></div></div>
-<div id="timer" class="timer" hidden role="timer"><b id="timer-v">1:30</b><button data-act="timer-add">+15 s</button><button data-act="timer-stop">Cerrar</button></div>
+<div id="timer" class="timer" hidden role="timer" aria-live="polite"><div class="timer-txt"><span id="timer-l"></span><b id="timer-v">1:30</b></div><button data-act="timer-add">+15 s</button><button id="timer-skip" data-act="timer-skip">Saltar</button><button data-act="timer-stop">Cerrar</button></div>
 <div id="toast" class="toast" hidden role="status"></div>
 
 <script src="figures.js"></script>
