@@ -471,9 +471,9 @@
     const o = ST.days[s.date] || {};
     return `<section class="day-opts card">
       <div class="opt-row"><span class="eyebrow">Dónde</span><div class="seg seg-2" role="group" aria-label="Dónde entrenas"><button class="${s.where === 'gym' ? 'on' : ''}" data-act="where" data-date="${s.date}" data-v="gym">Gimnasio</button><button class="${s.where === 'home' ? 'on' : ''}" data-act="where" data-date="${s.date}" data-v="home">${ico('home')}Casa</button></div></div>
-      <div class="opt-row"><span class="eyebrow">Tiempo</span><div class="dur-chips" role="group" aria-label="Tiempo disponible">${DURS.map((m) => `<button class="chipf ${o.min === m ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="${m}" ${m >= s.full ? 'disabled' : ''}>${m}</button>`).join('')}<button class="chipf ${!o.min ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="">Completa</button></div></div>
+      <div class="opt-row"><span class="eyebrow">Tiempo</span><div class="dur-chips" role="group" aria-label="Tiempo disponible">${DURS.map((m) => `<button class="chipf ${o.min === m ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="${m}" ${m >= s.full ? 'disabled' : ''}>${m}</button>`).join('')}<button class="chipf ${!o.min ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="">75 máx</button></div></div>
       ${s.where === 'home' ? '<p class="small muted opt-note">Sin equipo: cada ejercicio cambió por uno del mismo patrón. Sin peso, la intensidad sale del tempo lento: llega a RPE 8.</p>' : ''}
-      ${o.min ? `<p class="small muted opt-note">Recortado de ${s.full} a ~${s.duration} min: primero bajan series y salen accesorios pequeños; el cuádriceps, un empuje y un tirón siempre se quedan.</p>` : s.full > s.duration ? `<p class="small muted opt-note">El plan completo de hoy suma ~${s.full} min; se acotó a ${s.duration} quitando accesorios pequeños.</p>` : ''}
+      ${o.min ? `<p class="small muted opt-note">Recortado de ${s.full} a ~${s.duration} min: primero bajan series y salen accesorios pequeños; el cuádriceps, un empuje y un tirón siempre se quedan.</p>` : s.full > s.duration ? `<p class="small muted opt-note">El plan completo de hoy suma ~${s.full} min; se acotó a ${s.duration} (tu máximo es 1:15) quitando accesorios pequeños.</p>` : ''}
     </section>`;
   }
 

@@ -47,7 +47,7 @@ HTML/JS estático, **sin build ni dependencias**. Todo corre en el navegador.
 | `exercises.js` | **Biblioteca de 114 ejercicios** (`window.EX = { LIST, BY, TAGS, TAG_ES, AUTH }`). Cada uno: `id, n` (nombre), `es` (nombre en español), `tags`, `eq`, `uni`, `unit` (`reps/time/dist/cm`), `lvl`, `sp` (especial ⭐), `auth` (categoría dinámica: impact/explosive/lateral/cod), `start, move, mus, err[], safe[], reg, prog, why?`, `fig` (keyframes + props), `q` (URL de búsqueda en YouTube). |
 | `program.js` | **El programa**: fases, plantillas semanales, rotación, prescripciones, trabajo dinámico, **pesos sugeridos**, hitos, readiness, opciones de sábado. Expone `window.PROG`. |
 | `app.js` | UI: router por hash, vistas, checkboxes en `localStorage`, gráficas SVG hechas a mano, temporizador de descanso, sheet de ejercicio con animación. |
-| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v5`. |
+| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v6`. |
 | `manifest.webmanifest` | PWA (start_url `./#hoy`, standalone, íconos). |
 | `icons/` | `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (generados con Playwright desde el SVG). |
 | `.nojekyll` | Para que GitHub Pages sirva tal cual. |
@@ -98,7 +98,7 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
 ## 5b. Personalización (14 oct 2026) — program.js
 - **Plantillas:** sin finishers. Lun D = isométrico de cuádriceps (Spanish squat / ski hold) + core + pantorrilla, C3 tríceps. Mié D1 = 2º cuádriceps (leg extension / reverse step-down), C3 bíceps, D3 core. Vie C3 bíceps, D3 hombro. Mar/Jue D3 tibial / plancha lateral-Copenhagen. Cada día de pierna ≥2 ejercicios de cuádriceps.
 - **`xl` "+1 serie izquierda"** en cuádriceps unilateral (reps), F1–F4, no en descarga.
-- **Duración:** `estimate(s)` (min, redondeo a 5). Sin elección se acota a `DEFAULT_MIN = 75`. Elegible 20/30/45/60. `trim()`: primero baja series de lo de baja prioridad (`keepScore`), luego quita ejercicios; siempre quedan el principal, ≥2 cuádriceps (1 en 20 min), ≥1 empuje y ≥1 tirón.
+- **Duración:** `estimate(s)` (min, redondeo a 5). Sin elección se acota a `DEFAULT_MIN = 75` (Giacomo: nunca más de 1:15). Elegible 20/30/45/60. `trim()`: primero baja series de lo de baja prioridad (`keepScore`), luego quita ejercicios; siempre quedan el principal, ≥2 cuádriceps (1 en 20 min), ≥1 empuje y ≥1 tirón.
 - **Casa:** `HOME` mapa gym→sin equipo (primero no repetido), `homeOk(ex)` por `HOME_EQ`; `casaRx` = más reps + tempo lento, RPE 8, sin peso. Calentamiento `WARMUP.home`.
 - **Cambiar ejercicio (⇄):** en la ficha, candidatos del mismo `patternOf` (app.js); `ST.swaps[id] = {to, from}` aplica desde esa fecha; orden: casa → swap → escalera.
 - **Retroalimentación:** `adjState(id, date)` recorre respuestas previas: Fácil = ×1.08 sobre lo usado y mínimo un escalón (`nextUp`); Bien = sigue la curva desde lo usado (recalibra si corrigió el peso); Pesado = congela; 2 Pesados = −5 %; Molestia = −10 % + nota de regresión. `loadFor(id, date, type, plain)` (`plain` = plan original, para gráficas). Sin peso: `LADDERS` (2 Fácil → variante más difícil; Molestia o 2 Pesado → más fácil).
