@@ -29,13 +29,14 @@ App web personal (PWA) de entrenamiento de Giacomo para **terminar de rehabilita
 - Quiere ser **atleta completo**: piernas listas para el viaje (idealmente desde fines de enero) **y** torso completo (pecho, espalda, hombros, bíceps, tríceps). El cuádriceps es su prioridad. **No hacía los finishers** → se eliminaron como bloque aparte.
 - Quiere **alternativas** cuando no puede ir al gym. **Equipo (19 oct 2026): en el gimnasio NO hay bandas; en casa SÍ tiene bandas** (más peso corporal, silla, mesa, toalla, puerta).
 - Siente **más cansada la pierna derecha** con los mismos pesos (probable compensación en bilaterales / inhibición del cuádriceps izquierdo): se agregó "+1 serie izquierda" en cuádriceps unilateral.
-- Aún **sin luz verde para trotar** (oct 2026); la etapa 1 de impacto incluye esa luz verde en su prueba.
+- Aún **sin luz verde para trotar ni saltar** (oct 2026), aunque cree que podría. Se le recomendó preguntarle a su fisio en la revisión del 30 oct; la etapa 1 de impacto incluye esa luz verde en su prueba.
+- **Cardio / "aguantar el ritmo":** le interesa **saltar la cuerda**. Antes de la luz verde: bici, caminadora inclinada, cuerda sin saltar. Recomendación dada: base aeróbica 2×/semana a ritmo de conversación (caminadora inclinada favorita), intervalos 1×/semana progresando a 3 min "como una bajada", y resistencia isométrica de cuádriceps (wall sit / ski hold 60–90 s). Si viaja a altura (>2,000 m), la base aeróbica pesa más.
 - **Realidad: va ~3 días por semana, no 5** (dicho el 19 oct 2026), en días variables por trabajo y vida. → Desde el 19 oct el programa es **3 sesiones full body A/B/C en orden** (la siguiente el día que vaya) + **Extra opcional** cuando ya hizo 3 en la semana. Máximo 1:15 por sesión.
-- **No quiere un flujo centrado en autorizaciones del doctor.** Se quitaron los toggles de autorización; el trabajo dinámico entra por calendario (semana 8) con una alternativa por ejercicio.
+- **No quiere un flujo centrado en autorizaciones del doctor** (sin toggles). El impacto avanza por la **ruta de impacto** con pruebas de un toque; la etapa 1 incluye "tu fisio te dio luz verde" y puede adelantarse con ella.
 - Quiere **pesos sugeridos** en **kg y lb** (su gym tiene máquinas en ambas unidades).
-- Martes y jueves (los "días de movilidad/estabilidad") deben ser **full body con una kettlebell** (+ banda + peso corporal), sin máquinas.
+- (Histórico) Martes y jueves eran full body con kettlebell; desde el 19 oct ya no hay días fijos (formato A/B/C). Su contenido (equilibrio, core, carries, KB) quedó repartido en A/B/C.
 - **Sin encabezado fijo/sticky** — en modo app de iPhone se encimaba con la hora. Se quitó el header completo.
-- Estilo de respuesta general (memoria): respuestas concisas, en español, sin recapitular de más. Implementar directo tras acordar, sin planes largos. Él corre los `git push` cuando no hay token disponible.
+- Estilo de respuesta general (memoria): respuestas concisas, en español, sin recapitular de más. Implementar directo tras acordar, sin planes largos. Él corre los `git push` cuando no hay token disponible. **Responde siempre en español.**
 
 ## 4. Arquitectura
 
@@ -156,7 +157,7 @@ Galería de todas las figuras: crear un HTML temporal que cargue `figures.js` + 
 ### Publicar
 1. Commit (mensaje explicando el porqué; terminar con `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`).
 2. **Subir `CACHE` en `sw.js`** si cambió algo visible.
-3. `git push` — **lo corre Giacomo** desde su terminal (no hay credencial válida guardada; el PAT que estaba en el remote de JAX expiró → "Bad credentials"). Si Giacomo da un token nuevo, usarlo solo inline en el comando de push, nunca guardarlo en archivos ni en `git remote`.
+3. `git push` — **lo corre Giacomo** desde su terminal: `cd ~/acl-ski-prep && git push origin main` (no hay credencial guardada para la cuenta `giiacomiino`; `GIT_TERMINAL_PROMPT=0 git push` falla con "could not read Username"). El PAT de qiorafinanzas que está en memoria es de **otra cuenta**: no usarlo aquí. Si Giacomo da un token de `giiacomiino`, usarlo solo inline en el comando de push, nunca guardarlo en archivos ni en `git remote`.
 4. GitHub Pages reconstruye en 1–2 min. En el iPhone hay que cerrar y reabrir la app para tomar la versión nueva (service worker).
 
 ### Gotchas conocidos
@@ -180,6 +181,11 @@ Galería de todas las figuras: crear un HTML temporal que cargue `figures.js` + 
 9. (19 oct 2026) Gym sin bandas / casa con bandas; más trabajo lateral (C), 2º cuádriceps en B, recorte que protege cardio y brazos.
 
 ## 10. Ideas pendientes / posibles siguientes pasos (no pedidas aún)
+
+- **Al retomar:** correr `git status -sb` para ver si quedaron commits sin push (Giacomo es quien hace el push).
+- **Ofrecido y sin respuesta:** convertir el Extra en una sesión de **torso** (en enero el torso queda en mantenimiento, ≈6–9 series/semana por grupo, por el tope de 75 min y la prioridad de piernas e impacto).
+- **12 de 580 combinaciones** (día × lugar × duración) se pasan 5 min al elegir 20/30/45, porque se protegen cuádriceps, empuje y tirón. Aceptado; revisar si se queja.
+- **Días pasados del formato anterior** (antes del 19 oct) se muestran con el contenido de la sesión A/B/C que les tocó por orden, no con lo que hizo ese día.
 
 - Elegir "solo tengo una KB de X kg" en Perfil y ajustar los pesos sugeridos de KB.
 - Notas por sesión opcionales (se quitaron junto con el registro).
