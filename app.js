@@ -29,7 +29,7 @@
   // al tocar algo de una sesión, ese día queda registrado con el tipo que tenía (A, B, C o Extra)
   function logDay(date) {
     const s = PROG.session(date);
-    if (!ST.log[date] && s && (s.kind === 'gym' || s.kind === 'extra')) ST.log[date] = s.type;
+    if (!ST.log[date] && s && ['gym', 'extra', 'cardio'].includes(s.kind)) ST.log[date] = s.type;
   }
   function unlogIfEmpty(date) {
     const any = (o) => Object.values(o[date] || {}).some(Boolean);
@@ -110,6 +110,11 @@
   function weekDoneCount(w) {
     let n = 0;
     for (let i = 0; i < 7; i++) { const d = PROG.addDays(wkMonday(w), i); if (PROG.inProgram(d) && isDone(d) && isWorkout(PROG.session(d))) n++; }
+    return n;
+  }
+  function cardioCount(w) {
+    let n = 0;
+    for (let d = w ? wkMonday(w) : PROG.START, i = 0; d <= PROG.END && (!w || i < 7); d = PROG.addDays(d, 1), i++) { const s = PROG.session(d); if (s && s.kind === 'cardio' && isDone(d)) n++; }
     return n;
   }
   function trainingDays(upto) {
@@ -276,7 +281,7 @@
       </a>` : ''}
       <div class="grid-2">
         <div class="card stat"><span class="eyebrow">Días entrenados</span><b class="num big">${td.done}<small>/${tot}</small></b><span class="muted small">${td.planned ? Math.round((td.done / td.planned) * 100) : 0}% de lo planeado a hoy</span></div>
-        <div class="card stat"><span class="eyebrow">Esta semana</span><b class="num big">${weekDoneCount(wk)}<small>/${PER_WEEK(wk)}</small></b><span class="muted small">Racha: ${streak()} ${streak() === 1 ? 'semana' : 'semanas'} con la meta</span></div>
+        <div class="card stat"><span class="eyebrow">Esta semana</span><b class="num big">${weekDoneCount(wk)}<small>/${PER_WEEK(wk)}</small></b><span class="muted small">${cardioCount(wk) ? `+ ${cardioCount(wk)} de cardio · ` : ''}Racha: ${streak()} ${streak() === 1 ? 'semana' : 'semanas'} con la meta</span></div>
       </div>
       ${boxCard()}
       ${impactCard()}
@@ -304,7 +309,7 @@
     if (s.kind === 'rest' || s.kind === 'off') return date < T ? 'rest' : date === T ? 'today' : 'rest';
     if (isDone(date)) return 'done';
     if (date === T) return 'today';
-    if (date < T) return isWorkout(s) || s.kind === 'extra' ? 'missed' : 'rest';
+    if (date < T) return isWorkout(s) || s.kind === 'extra' || s.kind === 'cardio' ? 'missed' : 'rest';
     return 'pending';
   }
   const STATUS_TXT = { done: 'Completado', today: 'Hoy', missed: 'A medias', pending: 'Sugerido', rest: '' };
@@ -313,7 +318,7 @@
     if (calMode === 'week') {
       const mon = mondayOf(calCursor), wk = PROG.weekOf(mon);
       body += `<div class="cal-nav"><button class="icon-btn" data-act="cal-prev" aria-label="Semana anterior">‹</button><b>Semana ${wk} · ${dShort(mon)} – ${dShort(PROG.addDays(mon, 6))}</b><button class="icon-btn" data-act="cal-next" aria-label="Semana siguiente">›</button></div>`;
-      body += `<div class="banner"><span>Semana ${wk}: <b>${weekDoneCount(wk)} de ${PER_WEEK(wk)}</b> sesiones. Los días futuros son una sugerencia: ve cuando puedas y la app te da la siguiente en orden (A → B → C).</span></div>`;
+      body += `<div class="banner"><span>Semana ${wk}: <b>${weekDoneCount(wk)} de ${PER_WEEK(wk)}</b> sesiones de fuerza${cardioCount(wk) ? ` · ${cardioCount(wk)} de cardio` : ''}. Los días futuros son una sugerencia: ve cuando puedas y la app te da la siguiente en orden (A → B → C).</span></div>`;
       if (PROG.DELOAD_WEEKS.includes(wk)) body += '<div class="banner">Semana de descarga: una serie menos y cargas ~15% más bajas.</div>';
       const stIn = PROG.IMPACT.find((x) => x.n && x.from >= mon && x.from <= PROG.addDays(mon, 6));
       if (stIn) body += `<a class="banner banner-dyn" href="#impacto">${ico('jump')}<span>Ruta de impacto · etapa ${stIn.n}: ${esc(stIn.name.toLowerCase())}, si pasas la prueba.</span></a>`;
@@ -339,7 +344,7 @@
         if (!s) { body += `<span class="mcell out"><b class="num">${i}</b></span>`; continue; }
         body += `<a class="mcell st-${st} kind-${s.kind}${d === T ? ' is-today' : ''}" href="#dia/${d}" aria-label="${dLong(d)}: ${esc(s.title)}"><b class="num">${i}</b><i class="dot"></i>${st === 'done' ? '<i class="tick">✓</i>' : ''}</a>`;
       }
-      body += '</div></div><div class="legend"><span><i class="dot kind-gym"></i>Sesión A/B/C</span><span><i class="dot kind-extra"></i>Extra</span><span><i class="dot kind-recovery"></i>Recuperación</span><span><i class="dot kind-rest"></i>Descanso</span><span>✓ Completado</span></div>';
+      body += '</div></div><div class="legend"><span><i class="dot kind-gym"></i>Sesión A/B/C</span><span><i class="dot kind-extra"></i>Extra</span><span><i class="dot kind-cardio"></i>Cardio</span><span><i class="dot kind-recovery"></i>Recuperación</span><span><i class="dot kind-rest"></i>Descanso</span><span>✓ Completado</span></div>';
     }
     view().innerHTML = `<header class="page-head"><h1 class="display">Calendario</h1>${calSeg(calMode)}</header>${body}`;
   }
@@ -493,7 +498,9 @@
   const DURS = [20, 30, 45, 60];
   function dayOpts(s) {
     const o = ST.days[s.date] || {};
+    const pick = o.pick || '', canPick = s.date >= T && !ST.log[s.date];
     return `<section class="day-opts card">
+      ${canPick ? `<div class="opt-row"><span class="eyebrow">Hoy hago</span><div class="seg seg-3" role="group" aria-label="Qué haces hoy"><button class="${!pick ? 'on' : ''}" data-act="pick" data-date="${s.date}" data-v="">Fuerza</button><button class="${pick === 'Y' ? 'on' : ''}" data-act="pick" data-date="${s.date}" data-v="Y">Cardio</button><button class="${pick === 'X' ? 'on' : ''}" data-act="pick" data-date="${s.date}" data-v="X">Extra</button></div></div>` : ''}
       <div class="opt-row"><span class="eyebrow">Dónde</span><div class="seg seg-2" role="group" aria-label="Dónde entrenas"><button class="${s.where === 'gym' ? 'on' : ''}" data-act="where" data-date="${s.date}" data-v="gym">Gimnasio</button><button class="${s.where === 'home' ? 'on' : ''}" data-act="where" data-date="${s.date}" data-v="home">${ico('home')}Casa</button></div></div>
       <div class="opt-row"><span class="eyebrow">Tiempo</span><div class="dur-chips" role="group" aria-label="Tiempo disponible">${DURS.map((m) => `<button class="chipf ${o.min === m ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="${m}" ${m >= s.full ? 'disabled' : ''}>${m}</button>`).join('')}<button class="chipf ${!o.min ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="">75 máx</button></div></div>
       ${s.where === 'home' ? '<p class="small muted opt-note">En casa: cada ejercicio cambió por uno del mismo patrón con peso corporal o bandas. Sin peso, la intensidad sale del tempo lento: llega a RPE 8.</p>' : ''}
@@ -523,7 +530,8 @@
     if (s.kind === 'recovery') { view().innerHTML = nav + head + recoveryBody(date); return; }
     if (s.kind === 'rest' || s.kind === 'off') {
       const nx = nextWorkout(date > T ? date : T);
-      view().innerHTML = nav + head + `<div class="card"><p>${date < T ? 'No entrenaste este día. Sin problema: la siguiente sesión te espera en orden.' : 'Sin sesión sugerida. Si este día sí puedes ir, abre la app ese día y te da tu siguiente sesión.'}</p>${nx ? `<p class="muted small">Siguiente en orden: <b>${esc(nx.title)}</b></p>` : ''}</div>`;
+      view().innerHTML = nav + head + `<div class="card"><p>${date < T ? 'No entrenaste este día. Sin problema: la siguiente sesión te espera en orden.' : 'Sin sesión sugerida. Si este día sí puedes ir, abre la app ese día y te da tu siguiente sesión.'}</p>${nx ? `<p class="muted small">Siguiente en orden: <b>${esc(nx.title)}</b></p>` : ''}
+        <button class="btn btn-ghost btn-block" data-act="${date < T ? 'logcardio' : 'pick'}" data-date="${date}" data-v="Y">${ico('jump')}${date < T ? '¿Hiciste cardio? Regístralo' : 'Planear cardio este día'}</button></div>`;
       return;
     }
     if (s.kind === 'travel') {
@@ -540,7 +548,8 @@
     if (pain) html += `<div class="banner banner-yellow"><span><b>Marcaste molestia el ${dShort(pain)}.</b> Revisa el semáforo: si sigue, hoy no subas pesos y consúltalo con tu fisio.</span></div>`;
     const due = date === T ? PROG.gateDue(date) : null;
     if (due) html += `<section class="card gate-card">${gateBox(due, true)}<a class="mini-link small" href="#impacto">Ver la ruta de impacto completa</a></section>`;
-    if (s.kind === 'extra') html += `<div class="banner">Opcional: ya hiciste tus ${weekDoneCount(s.week)} sesiones de la semana. Hazlo solo si te sientes bien; descansar también suma. También puedes elegir una opción de <a href="#sabado">recuperación</a>.</div>`;
+    if (s.kind === 'cardio') html += `<div class="banner"><span><b>Para aguantar el ritmo.</b> Intervalos primero (▶ marca los cambios) y luego base aeróbica a ritmo de conversación: podrías hablar en frases, no cantar. Cuenta aparte de tus 3 de fuerza. Si la rodilla molesta al día siguiente, baja la intensidad.</span></div>`;
+    else if (s.kind === 'extra') html += `<div class="banner">Opcional: ya hiciste tus ${weekDoneCount(s.week)} sesiones de la semana. Hazlo solo si te sientes bien; descansar también suma. También puedes elegir una opción de <a href="#sabado">recuperación</a>.</div>`;
     else if (date >= T && s.kind === 'gym') html += `<p class="muted small type-note">Te toca la <b>${esc(s.title.split('·')[0].trim())}</b> por orden (A → B → C), el día que vayas. Esta semana llevas ${weekDoneCount(s.week)} de ${PER_WEEK(s.week)}.</p>`;
     if (!s.short) html += dayOpts(s);
     html += KNEE;
@@ -711,7 +720,7 @@
     view().innerHTML = `<header class="page-head"><h1 class="display">My progress</h1><p class="muted">Lo que llevas hecho y cómo suben tus pesos de octubre a febrero.</p></header>
       <div class="grid-2">
         <div class="card stat"><span class="eyebrow">Sesiones</span><b class="num big">${td.done}<small>/${tot}</small></b><span class="muted small">${Math.round((td.done / tot) * 100)}% del programa</span></div>
-        <div class="card stat"><span class="eyebrow">Semana</span><b class="num big">${wkNow}<small>/${PROG.TOTAL_WEEKS}</small></b><span class="muted small">Racha: ${streak()} sesiones</span></div>
+        <div class="card stat"><span class="eyebrow">Cardio</span><b class="num big">${cardioCount()}</b><span class="muted small">sesiones · semana ${wkNow} de ${PROG.TOTAL_WEEKS}</span></div>
       </div>
       <section class="card"><h3 class="flush">Sesiones por semana</h3>${weekBars()}</section>
       ${fbSummary()}
@@ -820,7 +829,7 @@
       c[t.dataset.key] = !c[t.dataset.key];
       ST.checks[date] = c;
       const s = PROG.session(date);
-      if ((isWorkout(s) || s.kind === 'extra') && !ST.done[date] && PROG.allItems(s).every((i) => c[i.code])) { ST.done[date] = true; toast('¡Sesión completada!'); }
+      if ((isWorkout(s) || s.kind === 'extra' || s.kind === 'cardio') && !ST.done[date] && PROG.allItems(s).every((i) => c[i.code])) { ST.done[date] = true; toast('¡Sesión completada!'); }
       unlogIfEmpty(date); save(); sync(); render();
     } else if (a === 'finish') { logDay(date); ST.done[date] = true; save(); sync(); toast('¡Sesión completada!'); render(); }
     else if (a === 'undo-finish') { delete ST.done[date]; unlogIfEmpty(date); save(); sync(); render(); }
@@ -860,6 +869,13 @@
         day[it.code] = Object.assign(cur, base, { kg, r: cur.r || 'ok' });
       }
       ST.fb[date] = day; save(); sync(); render();
+    } else if (a === 'pick') {
+      const o = Object.assign({}, ST.days[date]);
+      if (t.dataset.v) o.pick = t.dataset.v; else delete o.pick;
+      if (Object.keys(o).length) ST.days[date] = o; else delete ST.days[date];
+      save(); sync(); render();
+    } else if (a === 'logcardio') {
+      ST.log[date] = 'Y'; save(); sync(); render();
     } else if (a === 'where' || a === 'dur') {
       const o = Object.assign({}, ST.days[date]), v = t.dataset.v;
       if (a === 'where') { if (v === 'home') o.where = 'home'; else delete o.where; }

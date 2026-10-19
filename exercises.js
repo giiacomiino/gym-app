@@ -1375,6 +1375,39 @@
       fig: { frames: [P(ST, { la: [-30, 90], ra: [-30, 90] }), P(ST, { la: [88, 88], ra: [88, 88] })], props: [{ k: 'band', from: { at: 'lhand', f: 0, dx: -40 }, to: 'lhand' }], guides: [{ k: 'arrow', j: 'lhand' }] }
     },
 
+    /* ---------------- CARDIO ---------------- */
+    {
+      id: 'incline_walk', n: 'Incline treadmill walk', es: 'Caminadora inclinada', tags: ['quads', 'glutes', 'calves', 'ski'], eq: 'Caminadora', unit: 'time', lvl: 1, sp: true,
+      start: 'Caminadora con 8–12 % de inclinación, sin agarrarte de los barandales.',
+      move: 'Camina rápido a ritmo de conversación (podrías hablar en frases, no cantar). Pasos completos, tronco alto.',
+      mus: 'Cuádriceps, glúteos, pantorrilla, sistema cardiovascular',
+      err: ['Colgarse de los barandales', 'Inclinarse demasiado al frente'],
+      safe: ['Cero impacto: se puede desde ya. Si la rodilla molesta, baja la inclinación.'],
+      reg: 'Menos inclinación o bici.', prog: 'Más inclinación o más tiempo.',
+      why: 'Construye la base aeróbica que te permite recuperarte entre bajadas, y carga cuádriceps y glúteos en flexión sin impacto. Alternativas igual de buenas: bici o elíptica.',
+      fig: { frames: [{ t: 12, l: [28, -6], r: [-18, -30], la: [-25, 30], ra: [25, 70] }, { t: 12, l: [-18, -30], r: [28, -6], la: [25, 70], ra: [-25, 30] }], anchor: 'hip', fix: 84, speed: 800 }
+    },
+    {
+      id: 'brisk_walk', n: 'Brisk walk / stairs', es: 'Caminata rápida o escaleras', tags: ['quads', 'calves', 'ski'], eq: 'Calle o escaleras', unit: 'time', lvl: 1,
+      start: 'Calle con subidas, o escaleras de tu edificio.',
+      move: 'Camina rápido a ritmo de conversación. En escaleras, sube a buen ritmo y baja caminando tranquilo.',
+      mus: 'Cuádriceps, glúteos, pantorrilla, sistema cardiovascular',
+      err: ['Bajar escaleras rápido'],
+      safe: ['Bajar escaleras carga mucho la rodilla: hazlo despacio y apoyado del barandal si hace falta.'],
+      reg: 'Plano y más lento.', prog: 'Más subidas o más tiempo.',
+      fig: { from: 'incline_walk' }
+    },
+    {
+      id: 'shadow_rope', n: 'Shadow rope (no jump)', es: 'Cuerda sin saltar', tags: ['calves', 'ski'], eq: 'Cuerda (o imaginaria)', unit: 'time', lvl: 1,
+      start: 'De pie, cuerda en las manos o imaginaria.',
+      move: 'Gira la cuerda (o las muñecas) al ritmo de saltar mientras subes y bajas los talones rápido, sin despegar los pies del piso.',
+      mus: 'Pantorrilla, coordinación, ritmo',
+      err: ['Despegar los pies (eso ya es saltar)', 'Girar con todo el brazo'],
+      safe: ['Sin impacto: prepara ritmo y pantorrilla para cuando te den luz verde para saltar.'],
+      reg: 'Más lento.', prog: 'Cuerda real con saltos bajos (etapa 1 de impacto).',
+      fig: { frames: [P(F, { la: [28, 50], ra: [28, 50] }), P(F, { la: [28, 50], ra: [28, 50], lf: -30, rf: -30 })], anchor: 'ltoe', props: [{ k: 'rope' }], speed: 450 }
+    },
+
     /* ---------------- DINÁMICO (ruta de impacto) ---------------- */
     {
       id: 'squat_jump', n: 'Squat jump', es: 'Salto desde sentadilla', tags: ['quads', 'glutes', 'ski'], eq: 'Peso corporal', lvl: 3, auth: 'impact',

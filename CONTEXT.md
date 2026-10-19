@@ -48,7 +48,7 @@ HTML/JS estático, **sin build ni dependencias**. Todo corre en el navegador.
 | `exercises.js` | **Biblioteca de 114 ejercicios** (`window.EX = { LIST, BY, TAGS, TAG_ES, AUTH }`). Cada uno: `id, n` (nombre), `es` (nombre en español), `tags`, `eq`, `uni`, `unit` (`reps/time/dist/cm`), `lvl`, `sp` (especial ⭐), `auth` (categoría dinámica: impact/explosive/lateral/cod), `start, move, mus, err[], safe[], reg, prog, why?`, `fig` (keyframes + props), `q` (URL de búsqueda en YouTube). |
 | `program.js` | **El programa**: fases, plantillas semanales, rotación, prescripciones, trabajo dinámico, **pesos sugeridos**, hitos, readiness, opciones de sábado. Expone `window.PROG`. |
 | `app.js` | UI: router por hash, vistas, checkboxes en `localStorage`, gráficas SVG hechas a mano, temporizador de descanso, sheet de ejercicio con animación. |
-| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v8`. |
+| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v9`. |
 | `manifest.webmanifest` | PWA (start_url `./#hoy`, standalone, íconos). |
 | `icons/` | `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (generados con Playwright desde el SVG). |
 | `.nojekyll` | Para que GitHub Pages sirva tal cual. |
@@ -101,6 +101,7 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
 - `schedule()` decide el tipo de cada fecha: `ST.log[fecha]` (se registra al primer toque: palomita, respuesta, vuelta o terminar; se borra si queda vacío) → antes de `MIGRATE = 2026-10-19` los días L–V con marcas cuentan en orden → días pasados sin nada = `off` (o `recovery`) → **hoy** = siguiente de A→B→C, o `X` si ya hay 3 esa semana → futuro = sugerencia lun/mié/vie hasta 3 por semana.
 - `templateSession(fecha, tipo)` (caché) · `baseSession(fecha)` = plan lun A / mié B / vie C (para gráficas) · `planSession` = plan + impacto por calendario (vista de fases) · `session(fecha)` = la real personalizada.
 - Desde el 12 feb cualquier sesión es "Activación pre-viaje".
+- **Cardio (tipo `Y`, 19 oct 2026):** se elige en Hoy ("Hoy hago: Fuerza / Cardio / Extra" → `ST.days[fecha].pick`) o se registra en un día libre pasado (`logcardio`). No avanza el orden A/B/C y cuenta aparte. `cardioPlan()`: intervalos (etapa 0 bici 6–8 × 1/1; etapa 1 cuerda 6 × 30 s/30 s las primeras 2 semanas y luego 7 × 1 min/30 s; etapa 2 cuerda alternando 4 × 2/1; etapas 3–4 cuerda 4 × 3/1 "como una bajada") + base aeróbica a ritmo de conversación (caminadora inclinada 30→35→40 min, alternativa bici/elíptica; en casa caminata rápida/escaleras y cuerda sin saltar). La Sesión C trae intervalos en bici antes de la etapa 1. Ejercicios nuevos: `incline_walk`, `brisk_walk`, `shadow_rope`.
 - **Equipo por lugar:** `gymOk(ex)` (sin `Banda`/`Banda gruesa`) y `GYM_SUB` (Spanish squat → wall sit/ski hold, caminata con banda → zancada lateral/abductor, etc.); en casa `HOME_EQ` incluye bandas y `HOME` prefiere ejercicios con banda para el torso (remo, pull-apart, curl, tríceps, press). El ⇄ filtra por lugar.
 - **Sesión C2** alterna trabajo lateral (zancada lateral / lateral step-down) con equilibrio cada 2 semanas. **Sesión B** tiene 2º cuádriceps (leg extension / wall sit / sissy).
 - **Volumen:** desde F2 los accesorios van a 2 series (`ACC_TYPES`); máx. 2 ejercicios de impacto antes de la fuerza. `trim()`: acorta el trote (mín. 15 min) antes de quitar fuerza; nunca quita el cardio (≥45 min), ni el último empuje/tirón, ni baja de 2 cuádriceps (1 en ≤30), ni deja A/B sin brazos (≥60); calentamiento corto si hay impacto. Con 75 min, en enero el torso queda en mantenimiento (≈6–9 series/semana por grupo): prioridad piernas.
@@ -175,6 +176,7 @@ Galería de todas las figuras: crear un HTML temporal que cargue `figures.js` + 
 6. Header eliminado por completo (se encimaba con la barra de estado); módulo **Fases**.
 7. (14 oct 2026) Timers con sonido, modo Casa/duración/⇄, retroalimentación de un toque que ajusta pesos y variantes, ruta de impacto por etapas con pruebas, más cuádriceps y torso completo, sin finishers.
 8. (19 oct 2026) Va ~3 días/semana → sesiones A/B/C en orden + Extra opcional; máximo 75 min.
+10. (19 oct 2026) Cardio como sesión elegible (base aeróbica + intervalos; cuerda en cuanto pase la etapa 1).
 9. (19 oct 2026) Gym sin bandas / casa con bandas; más trabajo lateral (C), 2º cuádriceps en B, recorte que protege cardio y brazos.
 
 ## 10. Ideas pendientes / posibles siguientes pasos (no pedidas aún)

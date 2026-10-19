@@ -132,6 +132,7 @@
       ],
       ski: { 3: [S('E1', 'iso', { 3: ['ski_hold'] })], 4: [S('E1', 'iso', { 4: ['ski_hold'] }), S('E2', 'stab', { 4: ['band_lateral_walk'] })] }
     },
+    Y: { title: 'Cardio', sub: 'Base aeróbica + intervalos · para aguantar el ritmo en la montaña', imp: 'Y', extra: true, cardio: true, blocks: [] },
     X: {
       title: 'Extra opcional', sub: 'Core, equilibrio y tobillo · en casa o en el gym', imp: 'X', extra: true,
       blocks: [
@@ -168,7 +169,8 @@
   const R = (s, r, rpe, rest, iv) => ({ s, r, rpe, rest, iv });
   // por etapa: pre = después del calentamiento (frescos) · post = cardio al final. [id, rx, alternativa]
   const IMP = {
-    0: { pre: { 2: [['a_skip', R(2, '20 m', '4', '30 s'), 'sl_balance'], ['fast_calf', R(2, '15', '5', '30 s'), 'sl_calf']], 4: [['fast_calf', R(2, '15', '5', '30 s'), 'sl_calf']], 5: [['a_skip', R(2, '20 m', '4', '30 s'), 'sl_balance']] } },
+    0: { pre: { 2: [['a_skip', R(2, '20 m', '4', '30 s'), 'sl_balance'], ['fast_calf', R(2, '15', '5', '30 s'), 'sl_calf']], 4: [['fast_calf', R(2, '15', '5', '30 s'), 'sl_calf']], 5: [['a_skip', R(2, '20 m', '4', '30 s'), 'sl_balance']] },
+      post: { 5: [['bike_intervals', R(6, '6 × (1 min fuerte / 1 min suave)', '7–8', '—', IV(60, 60, 6, 'Fuerte', 'Suave')), 'incline_walk']] } },
     1: {
       pre: {
         2: [['pogo', R(3, '15', '5', '60 s'), 'fast_calf'], ['drop_landing', R(3, '5', '5–6', '60 s'), 'step_down']],
@@ -322,7 +324,7 @@
   };
 
   /* ---------- Casa: sustitutos sin equipo (el primero que no esté ya en la sesión) ---------- */
-  const HOME_EQ = ['Banda', 'Banda gruesa', 'Cable / banda', 'Peso corporal', 'Escalón', 'Pared', 'Deslizadores / toalla', 'Cinta en el piso', 'Pad / cojín', 'Banco', 'Poste', 'Poste / TRX', 'Peso corporal / KB', 'Cajón', 'Silla', 'Silla / sofá', 'Marco de puerta', 'Mesa firme', 'Toalla + puerta', 'Toalla', 'Sofá o alguien que sujete', 'Línea en el piso', 'Cuerda (o imaginaria)', 'Caminadora o calle plana'];
+  const HOME_EQ = ['Banda', 'Banda gruesa', 'Cable / banda', 'Peso corporal', 'Escalón', 'Pared', 'Deslizadores / toalla', 'Cinta en el piso', 'Pad / cojín', 'Banco', 'Poste', 'Poste / TRX', 'Peso corporal / KB', 'Cajón', 'Silla', 'Silla / sofá', 'Marco de puerta', 'Mesa firme', 'Toalla + puerta', 'Toalla', 'Sofá o alguien que sujete', 'Línea en el piso', 'Cuerda (o imaginaria)', 'Caminadora o calle plana', 'Calle o escaleras'];
   const homeOk = (ex) => HOME_EQ.includes(ex.eq) && ex.id !== 'box_jump_low';
   // en el gimnasio no hay bandas: esos ejercicios cambian por uno equivalente
   const GYM_NO = ['Banda', 'Banda gruesa'];
@@ -354,7 +356,7 @@
     cable_chop: ['pallof', 'side_plank'], cable_lift: ['pallof', 'side_plank'], dead_bug_w: ['dead_bug'], tgu: ['bear_plank', 'superman'],
     kb_suitcase: ['side_plank', 'bear_plank', 'plank'], kb_farmer: ['bear_plank', 'plank'], kb_front_rack: ['plank', 'bear_plank'],
     kb_swing: ['squat_jump', 'glute_bridge'], kb_clean: ['squat_jump', 'glute_bridge'], kb_clean_press: ['pike_push_up'], box_jump_low: ['squat_jump'],
-    bike_easy: ['a_skip'], bike_intervals: ['a_skip']
+    bike_easy: ['brisk_walk'], bike_intervals: ['shadow_rope', 'brisk_walk'], incline_walk: ['brisk_walk']
   };
 
   /* ---------- Utilidades de fecha (todo en fechas locales YYYY-MM-DD) ---------- */
@@ -457,8 +459,8 @@
       if (phase >= 2) blocks.forEach((b) => b.items.forEach((it) => { if (ACC_TYPES.includes(it.type)) it.rx.s = Math.min(it.rx.s, 2); }));
       const ski = ((T.ski || {})[phase] || []).map((sl) => resolveSlot(sl, phase, wip, deload, wk)).filter(Boolean);
       s = Object.assign(base, {
-        kind: T.extra ? 'extra' : 'gym', title: T.title, sub: T.sub, level: T.extra ? 1 : levelFor('gym', phase, deload),
-        warmup: (T.extra ? WARMUP.home.slice(0, 4) : WARMUP.gym.concat(phase >= 2 ? [['step_down', 'Step-down lento', '5/lado']] : [])).map(([id, n, dose]) => ({ id, n, dose })),
+        kind: T.cardio ? 'cardio' : T.extra ? 'extra' : 'gym', title: T.title, sub: T.sub, level: T.extra ? 1 : levelFor('gym', phase, deload),
+        warmup: (T.cardio ? [['a_skip', 'Caminata o pedaleo suave', '5 min'], ['fast_calf', 'Elevación de talones rápida', '15'], ['glute_bridge', 'Glute bridge', '10']] : T.extra ? WARMUP.home.slice(0, 4) : WARMUP.gym.concat(phase >= 2 ? [['step_down', 'Step-down lento', '5/lado']] : [])).map(([id, n, dose]) => ({ id, n, dose })),
         blocks, ski
       });
     }
@@ -505,6 +507,7 @@
       const dow = parse(d).getDay(), w = weekOf(d), act = ST.active[d];
       if (d === END) map[d] = 'travel';
       else if (ST.log[d]) take(d, ST.log[d]);
+      else if (d >= t && (ST.days[d] || {}).pick) take(d, ST.days[d].pick);
       else if (d < MIGRATE && act === 'w' && dow >= 1 && dow <= 5) take(d, ABC[idx]);
       else if (d < t) map[d] = act === 'r' ? 'recovery' : 'off';
       else if (d === t) take(d, (wc[w] || 0) < 3 ? ABC[idx] : 'X');
@@ -553,10 +556,24 @@
   };
   IMP_X[3] = { post: [['jump_rope_alt', R(3, '1 min', '6', '45 s', IV(60, 45, 3, 'Alterna pies', 'Descansa')), 'jump_rope'], ['easy_run', R(1, '20 min', '4', '—', IV(1200, 0, 1, 'Trote suave', '')), 'walk_run']] };
   IMP_X[4] = { post: [['jump_rope', R(5, '1 min', '6', '20 s', IV(60, 20, 5, 'Cuerda', 'Pausa')), 'pogo'], ['easy_run', R(1, '20 min', '4', '—', IV(1200, 0, 1, 'Trote suave', '')), 'walk_run']] };
+  // Cardio: intervalos (bici antes de saltar; cuerda en cuanto pasas la etapa 1) + base aeróbica a ritmo de conversación
+  function cardioPlan(s, k) {
+    const m = s.date >= TAPER_FROM ? 30 : s.phase >= 3 ? 40 : s.phase === 2 ? 35 : 30;
+    const base = ['incline_walk', R(1, `${m} min`, '3–4', '—', IV(m * 60, 0, 1, 'Ritmo de conversación', '')), 'bike_easy'];
+    const g1 = (ST.gates.jump || {}).date || IMPACT[1].from;
+    let iv;
+    if (k === 0) { const n = s.phase >= 2 ? 8 : 6; iv = ['bike_intervals', R(n, `${n} × (1 min fuerte / 1 min suave)`, '7–8', '—', IV(60, 60, n, 'Fuerte', 'Suave')), 'shadow_rope']; }
+    else if (k === 1) iv = diffDays(g1 > s.date ? IMPACT[1].from : g1, s.date) < 14
+      ? ['jump_rope', R(6, '6 × (30 s / 30 s)', '5–6', '—', IV(30, 30, 6, 'Cuerda', 'Descansa')), 'bike_intervals']
+      : ['jump_rope', R(7, '7 × (1 min / 30 s)', '6–7', '—', IV(60, 30, 7, 'Cuerda', 'Descansa')), 'bike_intervals'];
+    else if (k === 2) iv = ['jump_rope_alt', R(4, '4 × (2 min / 1 min)', '7', '—', IV(120, 60, 4, 'Alterna pies', 'Descansa')), 'jump_rope'];
+    else iv = ['jump_rope', R(4, '4 × (3 min / 1 min) · como una bajada', '7–8', '—', IV(180, 60, 4, 'Cuerda', 'Descansa')), 'bike_intervals'];
+    return { post: [iv, base] };
+  }
   function impactItems(s, where, k) {
     const T = TYPES[s.type], taper = s.date >= TAPER_FROM, out = { pre: [], post: [] };
     if (!T || s.short) return out;
-    const plan = T.imp === 'X' ? IMP_X[k] : IMP[k] && { pre: (IMP[k].pre || {})[T.imp], post: (IMP[k].post || {})[T.imp] };
+    const plan = T.imp === 'Y' ? cardioPlan(s, k) : T.imp === 'X' ? IMP_X[k] : IMP[k] && { pre: (IMP[k].pre || {})[T.imp], post: (IMP[k].post || {})[T.imp] };
     if (!plan) return out;
     const taken = new Set();
     ['pre', 'post'].forEach((when) => {
@@ -682,7 +699,7 @@
     if (!b.blocks) { pcache.set(date, b); return b; }
     const s = JSON.parse(JSON.stringify(b));
     const opt = ST.days[date] || {}, where = opt.where === 'home' ? 'home' : 'gym';
-    s.where = where; s.target = opt.min || (s.kind === 'extra' ? 40 : DEFAULT_MIN); s.chosen = !!opt.min;
+    s.where = where; s.target = opt.min || (s.kind === 'extra' ? 40 : s.kind === 'cardio' ? 60 : DEFAULT_MIN); s.chosen = !!opt.min;
     s.stage = stageAt(date);
     const imp = impactItems(s, where, s.stage);
     s.imp = imp.pre; s.cond = imp.post;
