@@ -90,6 +90,7 @@
   // sin peso: la intensidad sale de más reps, tempo lento y pausas
   const CASA_RX = {
     legs: { 1: ['12–15', '3-1-1'], 2: ['12–15', '4-1-1'], 3: ['10–12', '4-2-1'], 4: ['10–12', '3-1-1'], 5: ['10', '3-0-1'] },
+    uni: { 1: ['10–12', '3-1-1'], 2: ['10–12', '4-1-1'], 3: ['8–10', '4-2-1'], 4: ['8–10', '3-1-1'], 5: ['8', '3-0-1'] },
     upper: { 1: ['8–15', '3-1-1'], 2: ['8–15', '3-1-1'], 3: ['8–12', '4-1-1'], 4: ['8–12', '3-1-1'], 5: ['8–10', '2-1-1'] }
   };
 
@@ -116,8 +117,8 @@
       blocks: [
         ['A', S('A1', 'main', { 1: ['db_rdl'], 2: ['rdl'], 5: ['db_rdl'] }, MAIN), S('A2', 'upper', { 1: ['cable_row', 'cs_db_row'] })],
         ['B', S('B1', 'main', { 1: ['hip_thrust'], 3: ['hip_thrust', 'sl_hip_thrust'], 5: ['hip_thrust'] }), S('B2', 'upper', { 1: ['shoulder_press', 'db_shoulder_press'], 2: ['db_shoulder_press', 'hk_kb_press'] })],
-        ['C', S('C1', 'uni', { 1: ['step_down'], 2: ['step_down', 'reverse_step_down'], 3: ['step_down', 'lateral_step_down'], 4: ['lateral_step_down', 'step_down'], 5: ['step_down'] }, QUAD2 + ' Sirve cualquier escalón: rodilla alineada.'), S('C2', 'small', { 1: ['rear_delt_fly', 'face_pull'] }), S('C3', 'small', { 1: ['db_curl', 'hammer_curl'], 3: ['incline_curl', 'hammer_curl'] })],
-        ['D', S('D1', 'acc', { 1: ['hip_adductor', 'hip_abductor'], 3: ['copenhagen', 'hip_abductor'], 5: ['hip_abductor'] }), S('D2', 'core', { 1: ['pallof', 'side_plank'], 2: ['side_plank', 'bird_dog'], 3: ['tgu', 'side_plank'], 5: ['side_plank'] }), S('D3', 'carry', { 1: ['kb_suitcase', 'kb_front_rack'] })]
+        ['C', S('C1', 'uni', { 1: ['step_down'], 2: ['step_down', 'reverse_step_down'], 3: ['step_down', 'lateral_step_down'], 4: ['lateral_step_down', 'step_down'], 5: ['step_down'] }, 'Sirve cualquier escalón: rodilla alineada.'), S('C2', 'small', { 1: ['rear_delt_fly', 'face_pull'] }), S('C3', 'small', { 1: ['db_curl', 'hammer_curl'], 3: ['incline_curl', 'hammer_curl'] })],
+        ['D', S('D1', 'acc', { 1: ['leg_extension', 'wall_sit'], 3: ['leg_extension', 'sissy_squat_assisted'], 5: ['leg_extension'] }, 'Segundo ejercicio de cuádriceps del día.'), S('D2', 'acc', { 1: ['hip_adductor', 'hip_abductor'], 3: ['copenhagen', 'hip_abductor'], 5: ['hip_abductor'] }), S('D3', 'core', { 1: ['pallof', 'kb_suitcase'], 2: ['side_plank', 'kb_suitcase'], 3: ['tgu', 'kb_front_rack'], 5: ['side_plank'] })]
       ],
       ski: { 4: [S('E1', 'uni', { 4: ['lateral_step_up'] }), S('E2', 'iso', { 4: ['ski_hold'] })], 5: [S('E1', 'iso', { 5: ['ski_hold'] })] }
     },
@@ -126,7 +127,7 @@
       blocks: [
         ['A', S('A1', 'main', { 1: ['goblet_box'], 2: ['goblet_squat'], 3: ['box_squat'], 5: ['goblet_squat'] }, MAIN), S('A2', 'upper', { 1: ['incline_chest_press', 'incline_db'], 2: ['incline_db', 'push_up'], 5: ['incline_db'] })],
         ['B', S('B1', 'uni', { 1: ['sl_leg_press'] }, 'Prueba clave de simetría: compara ambos lados.'), S('B2', 'upper', { 1: ['db_row', 'kb_row'] })],
-        ['C', S('C1', 'uni', { 1: ['sl_rdl'] }, 'Pierna izquierda primero.'), S('C2', 'stab', { 1: ['sl_balance_reach', 'star_excursion'], 2: ['star_excursion', 'y_balance'], 3: ['y_balance', 'star_excursion'], 4: ['y_balance', 'unstable_balance'], 5: ['y_balance'] }), S('C3', 'small', { 1: ['lateral_raise', 'face_pull'] })],
+        ['C', S('C1', 'uni', { 1: ['sl_rdl'] }, 'Pierna izquierda primero.'), S('C2', 'stab', { 1: ['lateral_lunge', 'sl_balance_reach'], 2: ['lateral_step_down', 'star_excursion'], 3: ['lateral_lunge', 'y_balance'], 4: ['lateral_step_down', 'unstable_balance'], 5: ['y_balance'] }, 'Control lateral de rodilla (glúteo medio) o equilibrio: alternan cada 2 semanas.'), S('C3', 'small', { 1: ['lateral_raise', 'face_pull'] })],
         ['D', S('D1', 'core', { 1: ['bird_dog', 'bear_plank'], 2: ['bear_plank', 'kb_halo'], 3: ['kb_atw', 'bear_plank'], 5: ['bird_dog'] }), S('D2', 'carry', { 1: ['kb_farmer', 'kb_suitcase'] })]
       ],
       ski: { 3: [S('E1', 'iso', { 3: ['ski_hold'] })], 4: [S('E1', 'iso', { 4: ['ski_hold'] }), S('E2', 'stab', { 4: ['band_lateral_walk'] })] }
@@ -141,6 +142,7 @@
     }
   };
   const ABC = ['A', 'B', 'C'];
+  const ACC_TYPES = ['small', 'core', 'carry', 'stab', 'iso'];
   const PLAN_DOW = { 1: 'A', 3: 'B', 5: 'C' }; // sugerencia para días futuros y para las gráficas del plan
   const MIGRATE = '2026-10-19'; // antes de esta fecha la rutina era de 5 días fijos
 
@@ -177,22 +179,23 @@
     2: {
       pre: {
         2: [['jump_rope_alt', R(3, '1 min', '6', '45 s', IV(60, 45, 3, 'Alterna pies', 'Descansa')), 'jump_rope'], ['lateral_hop', R(3, '10', '6', '60 s'), 'pogo']],
-        4: [['box_jump_low', R(3, '5', '6–7', '90 s'), 'step_up'], ['kb_swing', R(3, '12', '7', '60 s'), 'kb_deadlift'], ['lateral_shuffle', R(3, '10 m ida y vuelta', '6', '60 s'), 'band_lateral_walk']]
+        4: [['box_jump_low', R(3, '5', '6–7', '90 s'), 'step_up'], ['kb_swing', R(3, '12', '7', '60 s'), 'kb_deadlift']],
+        5: [['lateral_shuffle', R(3, '10 m ida y vuelta', '6', '60 s'), 'lateral_lunge']]
       },
       post: { 5: [['easy_run', R(1, 'RUN', '5', '—'), 'walk_run']] }
     },
     3: {
       pre: {
         2: [['sl_hop_place', R(3, '10/lado', '6', '60 s'), 'pogo'], ['sl_hop_stick', R(3, '4/lado', '6–7', '90 s'), 'drop_landing']],
-        4: [['lateral_bound', R(3, '5/lado', '7', '90 s'), 'lateral_step_down'], ['kb_clean', R(3, '5/lado', '7', '60 s'), 'kb_swing'], ['jump_rope_alt', R(3, '1 min', '6', '45 s', IV(60, 45, 3, 'Alterna pies', 'Descansa')), 'jump_rope']],
-        5: [['lateral_shuffle', R(3, '15 m ida y vuelta', '7', '60 s'), 'band_lateral_walk']]
+        4: [['lateral_bound', R(3, '5/lado', '7', '90 s'), 'lateral_step_down'], ['kb_clean', R(3, '5/lado', '7', '60 s'), 'kb_swing']],
+        5: [['lateral_shuffle', R(3, '15 m ida y vuelta', '7', '60 s'), 'lateral_lunge']]
       },
       post: { 5: [['run_intervals', R(1, '6 × (1 min rápido / 1 min suave)', '7–8', '—', IV(60, 60, 6, 'Rápido', 'Suave')), 'easy_run']] }
     },
     4: {
       pre: {
         2: [['ski_hops', R(4, '30 s', '7', '45 s', IV(30, 45, 4, 'Ski hops', 'Descansa')), 'lateral_hop'], ['lateral_sl_hop', R(3, '4/lado', '7', '90 s'), 'lateral_bound']],
-        4: [['jump_turn_90', R(3, '6', '6–7', '60 s'), 'squat_jump'], ['lateral_bound', R(3, '6/lado', '7', '90 s'), 'lateral_step_down'], ['jump_rope', R(5, '1 min', '6', '20 s', IV(60, 20, 5, 'Cuerda', 'Pausa')), 'pogo']],
+        4: [['jump_turn_90', R(3, '6', '6–7', '60 s'), 'squat_jump'], ['lateral_bound', R(3, '6/lado', '7', '90 s'), 'lateral_step_down']],
         5: [['sl_hop_stick', R(3, '4/lado', '7', '90 s'), 'drop_landing']]
       },
       post: { 5: [['run_intervals', R(1, '8 × (40 s rápido / 80 s suave)', '7–8', '—', IV(40, 80, 8, 'Rápido', 'Suave')), 'easy_run']] }
@@ -313,14 +316,22 @@
   }
 
   const WARMUP = {
-    gym: [['bike_easy', 'Bicicleta suave', '5–8 min'], ['glute_bridge', 'Glute bridge', '12'], ['band_lateral_walk', 'Banded lateral walk', '10 pasos/lado'], ['goblet_box', 'Sentadilla a banco sin peso', '10'], ['sl_balance', 'Single-leg balance', '20 s/lado']],
+    gym: [['bike_easy', 'Bicicleta suave', '5–8 min'], ['glute_bridge', 'Glute bridge', '12'], ['lateral_lunge', 'Zancada lateral sin peso', '6/lado'], ['goblet_box', 'Sentadilla a banco sin peso', '10'], ['sl_balance', 'Single-leg balance', '20 s/lado']],
     kb: [['bike_easy', 'Bici o caminata', '5 min'], ['kb_halo', 'KB halo', '5/dirección'], ['kb_atw', 'KB around the world', '5/dirección'], ['dead_bug', 'Dead bug', '6/lado'], ['glute_bridge', 'Glute bridge', '12'], ['sl_balance', 'Single-leg balance', '20 s/lado']],
-    home: [['a_skip', 'Marcha con rodillas altas en el lugar', '2 min'], ['glute_bridge', 'Glute bridge', '12'], ['pause_squat', 'Sentadilla a silla sin peso', '10'], ['bird_dog', 'Bird dog', '5/lado'], ['side_lying_raise', 'Elevación lateral acostado', '10/lado'], ['sl_balance', 'Single-leg balance', '20 s/lado']]
+    home: [['a_skip', 'Marcha con rodillas altas en el lugar', '2 min'], ['glute_bridge', 'Glute bridge', '12'], ['pause_squat', 'Sentadilla a silla sin peso', '10'], ['bird_dog', 'Bird dog', '5/lado'], ['band_lateral_walk', 'Caminata lateral con banda', '10 pasos/lado'], ['sl_balance', 'Single-leg balance', '20 s/lado']]
   };
 
   /* ---------- Casa: sustitutos sin equipo (el primero que no esté ya en la sesión) ---------- */
-  const HOME_EQ = ['Peso corporal', 'Escalón', 'Pared', 'Deslizadores / toalla', 'Cinta en el piso', 'Pad / cojín', 'Banco', 'Poste', 'Poste / TRX', 'Peso corporal / KB', 'Cajón', 'Silla', 'Silla / sofá', 'Marco de puerta', 'Mesa firme', 'Toalla + puerta', 'Toalla', 'Sofá o alguien que sujete', 'Línea en el piso', 'Cuerda (o imaginaria)', 'Caminadora o calle plana'];
+  const HOME_EQ = ['Banda', 'Banda gruesa', 'Cable / banda', 'Peso corporal', 'Escalón', 'Pared', 'Deslizadores / toalla', 'Cinta en el piso', 'Pad / cojín', 'Banco', 'Poste', 'Poste / TRX', 'Peso corporal / KB', 'Cajón', 'Silla', 'Silla / sofá', 'Marco de puerta', 'Mesa firme', 'Toalla + puerta', 'Toalla', 'Sofá o alguien que sujete', 'Línea en el piso', 'Cuerda (o imaginaria)', 'Caminadora o calle plana'];
   const homeOk = (ex) => HOME_EQ.includes(ex.eq) && ex.id !== 'box_jump_low';
+  // en el gimnasio no hay bandas: esos ejercicios cambian por uno equivalente
+  const GYM_NO = ['Banda', 'Banda gruesa'];
+  const gymOk = (ex) => !GYM_NO.includes(ex.eq);
+  const GYM_SUB = {
+    spanish_squat: ['wall_sit', 'ski_hold'], band_lateral_walk: ['lateral_lunge', 'hip_abductor'], monster_walk: ['lateral_step_down', 'hip_abductor'],
+    band_abduction: ['hip_abductor', 'side_lying_raise'], band_kickback: ['cable_kickback'], ankle_inversion: ['tib_raise', 'sl_balance'], ankle_eversion: ['tib_raise', 'sl_balance'],
+    band_row: ['cable_row'], band_pull_apart: ['face_pull'], band_curl: ['cable_curl'], band_oh_ext: ['oh_cable_ext'], band_chest_press: ['chest_press']
+  };
   const HOME = {
     leg_press: ['bw_bulgarian', 'bw_split_squat'], sl_leg_press: ['sl_squat_assisted', 'bw_step_up'],
     leg_extension: ['sissy_squat_assisted', 'wall_sit'], sl_leg_extension: ['sissy_squat_assisted', 'wall_sit'],
@@ -330,21 +341,20 @@
     hip_thrust: ['sl_hip_thrust', 'sl_glute_bridge'], cable_kickback: ['sl_glute_bridge'], band_kickback: ['sl_glute_bridge'],
     seated_leg_curl: ['slider_curl', 'ham_bridge', 'nordic_assisted'], lying_leg_curl: ['slider_curl', 'ham_bridge'], sl_leg_curl: ['slider_curl', 'nordic_assisted'],
     rdl: ['bw_sl_rdl', 'ham_bridge'], db_rdl: ['bw_sl_rdl', 'ham_bridge'], kb_rdl: ['bw_sl_rdl', 'ham_bridge'], kb_deadlift: ['bw_sl_rdl', 'ham_bridge'], sl_rdl: ['bw_sl_rdl'],
-    hip_abductor: ['side_lying_raise'], hip_adductor: ['copenhagen', 'lateral_lunge'],
-    band_lateral_walk: ['side_lying_raise', 'side_plank'], monster_walk: ['side_lying_raise', 'side_plank'], band_abduction: ['side_lying_raise', 'side_plank'],
-    standing_calf: ['sl_calf'], seated_calf: ['sl_calf'], ankle_inversion: ['sl_balance', 'tib_raise'], ankle_eversion: ['sl_balance', 'tib_raise'],
+    hip_abductor: ['band_abduction', 'side_lying_raise'], hip_adductor: ['copenhagen', 'lateral_lunge'],
+    standing_calf: ['sl_calf'], seated_calf: ['sl_calf'], 
     chest_press: ['push_up', 'decline_push_up'], db_bench: ['push_up', 'decline_push_up'], incline_chest_press: ['decline_push_up', 'push_up'], incline_db: ['decline_push_up', 'push_up'],
     kb_floor_press: ['push_up', 'cg_push_up'], sa_kb_floor_press: ['push_up', 'cg_push_up'], kb_chest_pass: ['bear_plank', 'plank'],
-    lat_pulldown: ['table_row', 'towel_row'], neutral_pulldown: ['table_row', 'towel_row'], cable_row: ['towel_row', 'table_row'], cs_db_row: ['table_row', 'towel_row'],
-    db_row: ['towel_row', 'table_row'], kb_row: ['towel_row', 'table_row'], straight_arm_pd: ['superman'], face_pull: ['prone_ytw'], rear_delt_fly: ['prone_ytw'], lateral_raise: ['prone_ytw', 'pike_push_up'],
+    lat_pulldown: ['table_row', 'band_row'], neutral_pulldown: ['table_row', 'band_row'], cable_row: ['band_row', 'towel_row'], cs_db_row: ['band_row', 'table_row'],
+    db_row: ['band_row', 'towel_row'], kb_row: ['band_row', 'towel_row'], straight_arm_pd: ['superman'], face_pull: ['band_pull_apart', 'prone_ytw'], rear_delt_fly: ['band_pull_apart', 'prone_ytw'], lateral_raise: ['prone_ytw', 'pike_push_up'],
     shoulder_press: ['pike_push_up'], db_shoulder_press: ['pike_push_up'], hk_kb_press: ['pike_push_up'],
-    db_curl: ['towel_curl'], hammer_curl: ['towel_curl'], incline_curl: ['towel_curl'], cable_curl: ['towel_curl'], sa_cable_curl: ['towel_curl'],
-    rope_pushdown: ['chair_dip', 'cg_push_up'], cable_tri_ext: ['chair_dip', 'cg_push_up'], oh_cable_ext: ['chair_dip', 'cg_push_up'], db_oh_ext: ['chair_dip', 'cg_push_up'],
-    kb_halo: ['dead_bug', 'bird_dog'], kb_atw: ['dead_bug', 'bird_dog'], pallof: ['side_plank', 'bird_dog'], hk_pallof: ['side_plank', 'bird_dog'],
-    cable_chop: ['side_plank', 'bear_plank'], cable_lift: ['side_plank', 'bear_plank'], dead_bug_w: ['dead_bug'], tgu: ['bear_plank', 'superman'],
+    db_curl: ['band_curl', 'towel_curl'], hammer_curl: ['band_curl', 'towel_curl'], incline_curl: ['band_curl', 'towel_curl'], cable_curl: ['band_curl', 'towel_curl'], sa_cable_curl: ['band_curl', 'towel_curl'],
+    rope_pushdown: ['band_oh_ext', 'chair_dip'], cable_tri_ext: ['band_oh_ext', 'chair_dip'], oh_cable_ext: ['band_oh_ext', 'chair_dip'], db_oh_ext: ['band_oh_ext', 'chair_dip'],
+    kb_halo: ['pallof', 'dead_bug'], kb_atw: ['pallof', 'dead_bug'],
+    cable_chop: ['pallof', 'side_plank'], cable_lift: ['pallof', 'side_plank'], dead_bug_w: ['dead_bug'], tgu: ['bear_plank', 'superman'],
     kb_suitcase: ['side_plank', 'bear_plank', 'plank'], kb_farmer: ['bear_plank', 'plank'], kb_front_rack: ['plank', 'bear_plank'],
     kb_swing: ['squat_jump', 'glute_bridge'], kb_clean: ['squat_jump', 'glute_bridge'], kb_clean_press: ['pike_push_up'], box_jump_low: ['squat_jump'],
-    spanish_squat: ['wall_sit'], bike_easy: ['a_skip'], bike_intervals: ['a_skip']
+    bike_easy: ['a_skip'], bike_intervals: ['a_skip']
   };
 
   /* ---------- Utilidades de fecha (todo en fechas locales YYYY-MM-DD) ---------- */
@@ -388,7 +398,7 @@
   function casaRx(rx, ex, type, phase) {
     if (ex.unit !== 'reps' || !['main', 'uni', 'acc', 'kb', 'upper'].includes(type)) return rx;
     const legs = ex.tags.some((t) => ['quads', 'hams', 'glutes'].includes(t));
-    const [r, tempo] = (legs ? CASA_RX.legs : CASA_RX.upper)[phase];
+    const [r, tempo] = (legs ? (ex.uni ? CASA_RX.uni : CASA_RX.legs) : CASA_RX.upper)[phase];
     return Object.assign({}, rx, { r: r + (ex.uni ? '/lado' : ''), tempo, rpe: '8', home: true });
   }
 
@@ -443,6 +453,8 @@
     } else {
       const T = TYPES[type];
       const blocks = T.blocks.map(([code, ...slots]) => ({ code, items: slots.map((sl) => resolveSlot(sl, phase, wip, deload, wk)).filter(Boolean) })).filter((b) => b.items.length);
+      // 3 sesiones full body: cada grupo se trabaja varias veces por semana, los accesorios bastan con 2 series desde F2
+      if (phase >= 2) blocks.forEach((b) => b.items.forEach((it) => { if (ACC_TYPES.includes(it.type)) it.rx.s = Math.min(it.rx.s, 2); }));
       const ski = ((T.ski || {})[phase] || []).map((sl) => resolveSlot(sl, phase, wip, deload, wk)).filter(Boolean);
       s = Object.assign(base, {
         kind: T.extra ? 'extra' : 'gym', title: T.title, sub: T.sub, level: T.extra ? 1 : levelFor('gym', phase, deload),
@@ -539,17 +551,22 @@
     1: { post: [['jump_rope', R(4, '30 s', '5', '30 s', IV(30, 30, 4, 'Salta', 'Descansa')), 'pogo']] },
     2: { post: [['easy_run', R(1, '20 min', '4', '—', IV(1200, 0, 1, 'Trote suave', '')), 'walk_run']] }
   };
-  IMP_X[3] = IMP_X[4] = IMP_X[2];
+  IMP_X[3] = { post: [['jump_rope_alt', R(3, '1 min', '6', '45 s', IV(60, 45, 3, 'Alterna pies', 'Descansa')), 'jump_rope'], ['easy_run', R(1, '20 min', '4', '—', IV(1200, 0, 1, 'Trote suave', '')), 'walk_run']] };
+  IMP_X[4] = { post: [['jump_rope', R(5, '1 min', '6', '20 s', IV(60, 20, 5, 'Cuerda', 'Pausa')), 'pogo'], ['easy_run', R(1, '20 min', '4', '—', IV(1200, 0, 1, 'Trote suave', '')), 'walk_run']] };
   function impactItems(s, where, k) {
     const T = TYPES[s.type], taper = s.date >= TAPER_FROM, out = { pre: [], post: [] };
     if (!T || s.short) return out;
     const plan = T.imp === 'X' ? IMP_X[k] : IMP[k] && { pre: (IMP[k].pre || {})[T.imp], post: (IMP[k].post || {})[T.imp] };
     if (!plan) return out;
+    const taken = new Set();
     ['pre', 'post'].forEach((when) => {
       (plan[when] || []).forEach(([id, rx0, alt], i) => {
         let use = id, swapped = false;
         if (painRecent(s.date, id, 14) && alt) { use = alt; swapped = true; }
-        if (where === 'home' && !homeOk(BY()[use])) use = (HOME[use] || []).find((h) => homeOk(BY()[h]) && (k >= 1 || !BY()[h].auth)) || 'glute_bridge';
+        if (where === 'home' && !homeOk(BY()[use])) use = (HOME[use] || []).find((h) => homeOk(BY()[h]) && !taken.has(h) && (k >= 1 || !BY()[h].auth)) || 'glute_bridge';
+        if (where === 'gym' && !gymOk(BY()[use])) use = (GYM_SUB[use] || ['lateral_lunge'])[0];
+        if (taken.has(use)) return;
+        taken.add(use);
         const rx = Object.assign({}, rx0);
         if (rx.iv) rx.iv = Object.assign({}, rx.iv);
         if (rx.r === 'RUN') { const m = taper ? 15 : runMinutes(s.date); rx.r = `${m} min`; rx.iv = IV(m * 60, 0, 1, 'Trote suave', ''); }
@@ -596,7 +613,8 @@
     const ex = BY()[it.id], t = ex.tags, first = t[0];
     if (it.type === 'main') return 100;
     if (it.type === 'imp') return 60;
-    if (it.type === 'cond') return 45;
+    if (it.type === 'cond') return 75;
+    if (it.type === 'iso') return 55;
     if (first === 'quads' || (ex.uni && t.includes('quads'))) return 80;
     if (it.type === 'upper' || (it.type === 'kb' && ['chest', 'back', 'shoulders'].includes(first))) return 70;
     if (it.type === 'uni' || it.type === 'kb') return 65;
@@ -609,8 +627,8 @@
     if (['biceps', 'triceps', 'shoulders', 'back'].includes(first)) return 25;
     return 20;
   }
-  const isPush = (ex) => ex.tags[0] === 'chest' || (ex.tags[0] === 'shoulders' && ex.tags.includes('triceps'));
-  const isPull = (ex) => ex.tags[0] === 'back' && !ex.tags.includes('core');
+  const isPush = (ex) => ex.tags[0] === 'chest' || (ex.tags[0] === 'shoulders' && /press|pike/.test(ex.id));
+  const isPull = (ex) => ex.tags[0] === 'back' && ex.id !== 'superman';
   const isQuad = (ex) => ex.tags[0] === 'quads' || (ex.uni && ex.tags.includes('quads'));
 
   function trim(s, target) {
@@ -621,19 +639,29 @@
       s.blocks = s.blocks.filter((b) => b.items.length);
       ['ski', 'imp', 'cond'].forEach((k) => { s[k] = s[k].filter((x) => x !== it); });
     };
-    const minQuad = target <= 20 ? 1 : 2;
-    // primero menos series y calentamiento corto; luego, si aún no cabe, salen ejercicios
+    const isArm = (ex) => ['biceps', 'triceps'].includes(ex.tags[0]);
+    const minQuad = target <= 30 ? 1 : 2;
+    // 1) calentamiento corto si hay impacto (los saltitos ya calientan) o poco tiempo; menos series en lo accesorio
+    if (s.imp.length || target <= 30) s.warmShort = true;
     all().forEach((it) => { if (!it.rx.iv && keepScore(it) < 60 && it.rx.s > 2) it.rx.s--; });
-    if (target <= 30) s.warmShort = true;
+    // 2) el trote se acorta antes de quitar fuerza (mínimo 15 min)
+    const run = s.cond.find((it) => it.rx.iv && it.rx.iv.n === 1);
+    if (run && estimate(s) > target) {
+      const over = (estimate(s) - target) * 60, min = Math.max(15 * 60, run.rx.iv.on - over);
+      if (min < run.rx.iv.on) { run.rx.iv.on = Math.round(min / 300) * 300; run.rx.r = `${run.rx.iv.on / 60} min`; }
+    }
+    // 3) salen ejercicios por prioridad, respetando lo que nunca debe faltar
     const order = all().slice().sort((a, b) => keepScore(a) - keepScore(b));
     for (const it of order) {
       if (estimate(s) <= target) break;
-      if (it.type === 'main') continue;
+      if (it.type === 'main' && (it.code === 'A1' || target >= 60)) continue;
+      if (it.type === 'cond' && target >= 45) continue;
       const ex = BY()[it.id], rest = all().filter((x) => x !== it).map((x) => BY()[x.id]);
       if (isPush(ex) && !rest.some(isPush)) continue;
       if (isPull(ex) && !rest.some(isPull)) continue;
       if (isQuad(ex) && rest.filter(isQuad).length < minQuad) continue;
-      if (it.type === 'imp' && target >= 30 && s.imp.length <= 1) continue;
+      if (isArm(ex) && target >= 60 && !rest.some(isArm)) continue;
+      if (it.type === 'imp' && target >= 60 && s.imp.length <= 1) continue;
       remove(it);
     }
     if (estimate(s) > target) all().forEach((it) => { if (!it.rx.iv && it.type !== 'main' && it.rx.s > 2) it.rx.s--; });
@@ -644,6 +672,7 @@
   // sin elección, la sesión completa se acota a ~75 min (lo que sale primero: accesorios pequeños)
   const DEFAULT_MIN = 75;
   const HOME_SUB = { A: 'cuádriceps e isquios + pecho, espalda y tríceps', B: 'cadera y cuádriceps + espalda, hombro y bíceps', C: 'cuerpo completo y cardio' };
+  const okAt = (where, ex) => (where === 'home' ? homeOk(ex) : gymOk(ex));
   function session(date) {
     const hit = pcache.get(date);
     if (hit) return hit;
@@ -671,11 +700,21 @@
         used.add(to); it.from = it.id; reRx(it, to);
       });
     }
+    // gimnasio: sin bandas
+    if (where === 'gym') {
+      const used = new Set(items().map((it) => it.id));
+      items().forEach((it) => {
+        if (gymOk(BY()[it.id])) return;
+        const opts = GYM_SUB[it.id] || ['plank'], to = opts.find((h) => !used.has(h)) || opts[0];
+        used.add(to); it.from = it.id; it.noBand = true; reRx(it, to);
+      });
+      s.warmup = s.warmup.map((w) => (gymOk(BY()[w.id]) ? w : { id: 'lateral_lunge', n: 'Zancada lateral sin peso', dose: '6/lado' }));
+    }
     // cambios que elegiste (⇄), desde el día en que los hiciste
     items().forEach((it) => {
       const sw = ST.swaps[it.id];
       if (!sw || sw.from > date || !BY()[sw.to]) return;
-      if (where === 'home' && !homeOk(BY()[sw.to])) return;
+      if (!okAt(where, BY()[sw.to])) return;
       it.swappedFrom = it.id; reRx(it, sw.to);
     });
     // progresión de variantes por tu retroalimentación
@@ -685,7 +724,7 @@
       const lad = LADDERS[li], off = ladderOffset(li, date);
       if (!off) return;
       let to = lad[Math.max(0, Math.min(lad.length - 1, lad.indexOf(it.id) + off))];
-      if (where === 'home' && !homeOk(BY()[to])) to = it.id;
+      if (!okAt(where, BY()[to])) to = it.id;
       if (to !== it.id) { it.laddered = off > 0 ? 'up' : 'down'; it.ladderFrom = it.id; reRx(it, to); }
     });
     // prescripción final y peso sugerido
@@ -703,7 +742,7 @@
     const count = {};
     allItems(s).forEach((it) => { BY()[it.id].tags.forEach((t) => { count[t] = (count[t] || 0) + 1; }); });
     s.muscles = MUSCLE_ORDER.filter((m) => count[m]).sort((a, c) => count[c] - count[a]).slice(0, 4);
-    if (where === 'home' && s.kind === 'gym' && !s.short) s.sub = 'En casa, sin equipo · ' + HOME_SUB[s.type];
+    if (where === 'home' && s.kind === 'gym' && !s.short) s.sub = 'En casa, peso corporal y bandas · ' + HOME_SUB[s.type];
     pcache.set(date, s);
     return s;
   }
@@ -716,6 +755,9 @@
     if (!b || !b.blocks) return (planCache[date] = b);
     const s = Object.assign({}, b), imp = impactItems(s, 'gym', calStage(date));
     s.imp = imp.pre; s.cond = imp.post;
+    const gymize = (it) => (gymOk(BY()[it.id]) ? it : Object.assign({}, it, { id: GYM_SUB[it.id][0], rx: rxFor(it.type, BY()[GYM_SUB[it.id][0]], s.phase, s.deload, s.week) }));
+    s.blocks = s.blocks.map((bl) => Object.assign({}, bl, { items: bl.items.map(gymize) }));
+    s.ski = s.ski.map(gymize);
     return (planCache[date] = s);
   }
 
@@ -772,7 +814,7 @@
 
   window.PROG = {
     SURGERY, START, END, WEEK1, PHASES, DELOAD_WEEKS, TOTAL_WEEKS, LEVELS, MILESTONES, READINESS, RECOVERY, MOBILITY, IMPACT, TAPER_FROM, LOADS, HOME_EQ,
-    session, baseSession, planSession, typeOf, weekDone, ABC, DEFAULT_MIN, allItems, loadFor, growth, nextUp, stepOf, homeOk, stageAt, gateDue, setState, restSecOf, topNum,
+    session, baseSession, planSession, typeOf, weekDone, ABC, DEFAULT_MIN, allItems, loadFor, growth, nextUp, stepOf, homeOk, stageAt, gateDue, setState, restSecOf, topNum, gymOk,
     setProfile: (p) => { PROFILE = Object.assign({}, PROFILE, p); pcache.clear(); }, getProfile: () => PROFILE,
     parse, fmt, addDays, diffDays, today, weekOf, phaseOf, inProgram
   };

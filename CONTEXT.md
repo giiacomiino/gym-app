@@ -27,7 +27,7 @@ App web personal (PWA) de entrenamiento de Giacomo para **terminar de rehabilita
 - **"Que vaya al día":** la app abre directo en el entrenamiento de hoy (`#hoy`, también ruta por defecto). Se re-sincroniza la fecha si la app queda abierta de un día a otro.
 - **No quiere un tracker** (series/reps/RPE capturados). Sí aceptó (14 oct 2026) **un toque por ejercicio** (Fácil / Bien / Pesado / Molestia, en todos los ejercicios) y corregir opcionalmente el peso usado, para que la rutina **se ajuste a su avance real**. Las pruebas de la ruta de impacto son de un toque (pasa / no), sin números.
 - Quiere ser **atleta completo**: piernas listas para el viaje (idealmente desde fines de enero) **y** torso completo (pecho, espalda, hombros, bíceps, tríceps). El cuádriceps es su prioridad. **No hacía los finishers** → se eliminaron como bloque aparte.
-- Quiere **alternativas** cuando no puede ir al gym: en casa **no tiene ningún equipo** (solo peso corporal, silla, mesa, toalla, puerta).
+- Quiere **alternativas** cuando no puede ir al gym. **Equipo (19 oct 2026): en el gimnasio NO hay bandas; en casa SÍ tiene bandas** (más peso corporal, silla, mesa, toalla, puerta).
 - Siente **más cansada la pierna derecha** con los mismos pesos (probable compensación en bilaterales / inhibición del cuádriceps izquierdo): se agregó "+1 serie izquierda" en cuádriceps unilateral.
 - Aún **sin luz verde para trotar** (oct 2026); la etapa 1 de impacto incluye esa luz verde en su prueba.
 - **Realidad: va ~3 días por semana, no 5** (dicho el 19 oct 2026), en días variables por trabajo y vida. → Desde el 19 oct el programa es **3 sesiones full body A/B/C en orden** (la siguiente el día que vaya) + **Extra opcional** cuando ya hizo 3 en la semana. Máximo 1:15 por sesión.
@@ -48,7 +48,7 @@ HTML/JS estático, **sin build ni dependencias**. Todo corre en el navegador.
 | `exercises.js` | **Biblioteca de 114 ejercicios** (`window.EX = { LIST, BY, TAGS, TAG_ES, AUTH }`). Cada uno: `id, n` (nombre), `es` (nombre en español), `tags`, `eq`, `uni`, `unit` (`reps/time/dist/cm`), `lvl`, `sp` (especial ⭐), `auth` (categoría dinámica: impact/explosive/lateral/cod), `start, move, mus, err[], safe[], reg, prog, why?`, `fig` (keyframes + props), `q` (URL de búsqueda en YouTube). |
 | `program.js` | **El programa**: fases, plantillas semanales, rotación, prescripciones, trabajo dinámico, **pesos sugeridos**, hitos, readiness, opciones de sábado. Expone `window.PROG`. |
 | `app.js` | UI: router por hash, vistas, checkboxes en `localStorage`, gráficas SVG hechas a mano, temporizador de descanso, sheet de ejercicio con animación. |
-| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v7`. |
+| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v8`. |
 | `manifest.webmanifest` | PWA (start_url `./#hoy`, standalone, íconos). |
 | `icons/` | `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (generados con Playwright desde el SVG). |
 | `.nojekyll` | Para que GitHub Pages sirva tal cual. |
@@ -101,6 +101,9 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
 - `schedule()` decide el tipo de cada fecha: `ST.log[fecha]` (se registra al primer toque: palomita, respuesta, vuelta o terminar; se borra si queda vacío) → antes de `MIGRATE = 2026-10-19` los días L–V con marcas cuentan en orden → días pasados sin nada = `off` (o `recovery`) → **hoy** = siguiente de A→B→C, o `X` si ya hay 3 esa semana → futuro = sugerencia lun/mié/vie hasta 3 por semana.
 - `templateSession(fecha, tipo)` (caché) · `baseSession(fecha)` = plan lun A / mié B / vie C (para gráficas) · `planSession` = plan + impacto por calendario (vista de fases) · `session(fecha)` = la real personalizada.
 - Desde el 12 feb cualquier sesión es "Activación pre-viaje".
+- **Equipo por lugar:** `gymOk(ex)` (sin `Banda`/`Banda gruesa`) y `GYM_SUB` (Spanish squat → wall sit/ski hold, caminata con banda → zancada lateral/abductor, etc.); en casa `HOME_EQ` incluye bandas y `HOME` prefiere ejercicios con banda para el torso (remo, pull-apart, curl, tríceps, press). El ⇄ filtra por lugar.
+- **Sesión C2** alterna trabajo lateral (zancada lateral / lateral step-down) con equilibrio cada 2 semanas. **Sesión B** tiene 2º cuádriceps (leg extension / wall sit / sissy).
+- **Volumen:** desde F2 los accesorios van a 2 series (`ACC_TYPES`); máx. 2 ejercicios de impacto antes de la fuerza. `trim()`: acorta el trote (mín. 15 min) antes de quitar fuerza; nunca quita el cardio (≥45 min), ni el último empuje/tirón, ni baja de 2 cuádriceps (1 en ≤30), ni deja A/B sin brazos (≥60); calentamiento corto si hay impacto. Con 75 min, en enero el torso queda en mantenimiento (≈6–9 series/semana por grupo): prioridad piernas.
 - Avance: meta 3 por semana (2 en la semana 1) = 59 en total; racha = semanas seguidas cumpliendo la meta; calendario con días "libres" y "sugeridos".
 
 ## 5b. Personalización (14 oct 2026) — program.js
@@ -172,6 +175,7 @@ Galería de todas las figuras: crear un HTML temporal que cargue `figures.js` + 
 6. Header eliminado por completo (se encimaba con la barra de estado); módulo **Fases**.
 7. (14 oct 2026) Timers con sonido, modo Casa/duración/⇄, retroalimentación de un toque que ajusta pesos y variantes, ruta de impacto por etapas con pruebas, más cuádriceps y torso completo, sin finishers.
 8. (19 oct 2026) Va ~3 días/semana → sesiones A/B/C en orden + Extra opcional; máximo 75 min.
+9. (19 oct 2026) Gym sin bandas / casa con bandas; más trabajo lateral (C), 2º cuádriceps en B, recorte que protege cardio y brazos.
 
 ## 10. Ideas pendientes / posibles siguientes pasos (no pedidas aún)
 

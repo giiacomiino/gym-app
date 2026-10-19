@@ -1323,6 +1323,58 @@
       fig: { frames: [P(SEAT, { la: [8, 8], ra: [8, 8] }), P(SEAT, { la: [8, 150], ra: [8, 150] })], anchor: 'hip', fix: 46, props: [seat, { k: 'band', a: 'lhand', b: 'lank' }], guides: [{ k: 'arrow', j: 'lhand' }] }
     },
 
+    /* ---------------- CON BANDA (casa) ---------------- */
+    {
+      id: 'band_row', n: 'Band row', es: 'Remo con banda', tags: ['back', 'biceps'], eq: 'Banda', lvl: 1,
+      start: 'Banda anclada a la altura del pecho (cerrada en una puerta o alrededor de un poste). De pie, rodillas suaves, brazos estirados al frente.',
+      move: 'Jala llevando los codos atrás y juntando escápulas, pausa 1 s y regresa en 3 s.',
+      mus: 'Dorsal, romboides, trapecio medio, bíceps',
+      err: ['Encoger los hombros', 'Inclinarse atrás para jalar'],
+      safe: ['Revisa que el anclaje no se suelte.'],
+      reg: 'Banda más ligera o un paso más cerca.', prog: 'Banda más fuerte, un paso atrás o a un brazo.',
+      fig: { frames: [P(ST, { t: 4, l: [12, -6], r: [12, -6], la: [90, 90], ra: [90, 90] }), P(ST, { t: 4, l: [12, -6], r: [12, -6], la: [-45, 80], ra: [-45, 80] })], props: [{ k: 'band', from: { at: 'lhand', f: 0, dx: 34 }, to: 'lhand' }], guides: [{ k: 'arrow', j: 'lhand' }] }
+    },
+    {
+      id: 'band_pull_apart', n: 'Band pull-apart', es: 'Separación de banda', tags: ['shoulders', 'back'], eq: 'Banda', lvl: 1,
+      start: 'De pie, banda sujeta con ambas manos frente al pecho, brazos casi estirados.',
+      move: 'Separa las manos llevando la banda al pecho, aprieta escápulas 1 s y regresa lento.',
+      mus: 'Deltoides posterior, romboides, trapecio medio',
+      err: ['Doblar los codos', 'Arquear la espalda baja'],
+      safe: ['Postura alta; ayuda a compensar tanto empuje.'],
+      reg: 'Manos más separadas.', prog: 'Banda más fuerte o pausa de 3 s.',
+      fig: { frames: [P(F, { la: [70, 70], ra: [70, 70] }), P(F, { la: [92, 92], ra: [92, 92] })], props: [{ k: 'band', a: 'lhand', b: 'rhand' }], guides: [{ k: 'arrow', j: 'lhand' }] }
+    },
+    {
+      id: 'band_curl', n: 'Band curl', es: 'Curl con banda', tags: ['biceps'], eq: 'Banda', lvl: 1,
+      start: 'De pie sobre la banda, extremos en las manos, codos pegados al cuerpo.',
+      move: 'Sube en 2 s sin mover los codos y baja en 3 s.',
+      mus: 'Bíceps, braquial',
+      err: ['Balancear el tronco', 'Despegar los codos'],
+      safe: ['Pisa bien la banda.'],
+      reg: 'Banda más ligera.', prog: 'Banda más fuerte o pies más separados.',
+      fig: { frames: [P(ST, { la: [6, 6], ra: [6, 6] }), P(ST, { la: [6, 150], ra: [6, 150] })], props: [{ k: 'band', a: 'lhand', b: 'lank' }], guides: [{ k: 'arrow', j: 'lhand' }] }
+    },
+    {
+      id: 'band_oh_ext', n: 'Band overhead triceps extension', es: 'Extensión de tríceps con banda sobre la cabeza', tags: ['triceps'], eq: 'Banda', lvl: 1,
+      start: 'Banda bajo el pie de atrás, extremos detrás de la cabeza con los codos apuntando arriba.',
+      move: 'Estira los codos hacia arriba sin moverlos de lugar y baja en 3 s.',
+      mus: 'Tríceps (sobre todo la cabeza larga)',
+      err: ['Abrir los codos', 'Arquear la espalda'],
+      safe: ['Abdomen firme.'],
+      reg: 'Banda más ligera.', prog: 'Banda más fuerte.',
+      fig: { frames: [P(ST, { la: [168, 20], ra: [168, 20] }), P(ST, { la: [168, 172], ra: [168, 172] })], props: [{ k: 'band', a: 'lhand', b: 'rank' }], guides: [{ k: 'arrow', j: 'lhand' }] }
+    },
+    {
+      id: 'band_chest_press', n: 'Band chest press', es: 'Press de pecho con banda', tags: ['chest', 'triceps', 'shoulders'], eq: 'Banda', lvl: 1,
+      start: 'Banda anclada detrás de ti a la altura del pecho, un pie adelante, manos junto al pecho.',
+      move: 'Empuja al frente hasta estirar los brazos y regresa en 3 s.',
+      mus: 'Pectoral, tríceps, deltoides anterior',
+      err: ['Arquear la espalda', 'Soltar rápido'],
+      safe: ['Anclaje firme detrás.'],
+      reg: 'Un paso más cerca del anclaje.', prog: 'Banda más fuerte o a un brazo.',
+      fig: { frames: [P(ST, { la: [-30, 90], ra: [-30, 90] }), P(ST, { la: [88, 88], ra: [88, 88] })], props: [{ k: 'band', from: { at: 'lhand', f: 0, dx: -40 }, to: 'lhand' }], guides: [{ k: 'arrow', j: 'lhand' }] }
+    },
+
     /* ---------------- DINÁMICO (ruta de impacto) ---------------- */
     {
       id: 'squat_jump', n: 'Squat jump', es: 'Salto desde sentadilla', tags: ['quads', 'glutes', 'ski'], eq: 'Peso corporal', lvl: 3, auth: 'impact',

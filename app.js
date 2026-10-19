@@ -467,7 +467,7 @@
     const done = checked(date, item.code);
     const load = item.load;
     const notes = [];
-    if (item.from) notes.push(`En lugar de: ${EX.BY[item.from].n}`);
+    if (item.from) notes.push(`En lugar de: ${EX.BY[item.from].n}${item.noBand ? ' (en el gym no hay bandas)' : ''}`);
     if (item.swappedFrom) notes.push(`Lo cambiaste (antes: ${EX.BY[item.swappedFrom].n})`);
     if (item.laddered) notes.push(item.laddered === 'up' ? `Subiste de variante por tus "Fácil" (antes: ${EX.BY[item.ladderFrom].n})` : `Variante más fácil por tu última respuesta (antes: ${EX.BY[item.ladderFrom].n})`);
     if (item.pain) notes.push(`Molestia reciente: usa la regresión si hace falta (${ex.reg})`);
@@ -496,7 +496,7 @@
     return `<section class="day-opts card">
       <div class="opt-row"><span class="eyebrow">Dónde</span><div class="seg seg-2" role="group" aria-label="Dónde entrenas"><button class="${s.where === 'gym' ? 'on' : ''}" data-act="where" data-date="${s.date}" data-v="gym">Gimnasio</button><button class="${s.where === 'home' ? 'on' : ''}" data-act="where" data-date="${s.date}" data-v="home">${ico('home')}Casa</button></div></div>
       <div class="opt-row"><span class="eyebrow">Tiempo</span><div class="dur-chips" role="group" aria-label="Tiempo disponible">${DURS.map((m) => `<button class="chipf ${o.min === m ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="${m}" ${m >= s.full ? 'disabled' : ''}>${m}</button>`).join('')}<button class="chipf ${!o.min ? 'on' : ''}" data-act="dur" data-date="${s.date}" data-v="">75 máx</button></div></div>
-      ${s.where === 'home' ? '<p class="small muted opt-note">Sin equipo: cada ejercicio cambió por uno del mismo patrón. Sin peso, la intensidad sale del tempo lento: llega a RPE 8.</p>' : ''}
+      ${s.where === 'home' ? '<p class="small muted opt-note">En casa: cada ejercicio cambió por uno del mismo patrón con peso corporal o bandas. Sin peso, la intensidad sale del tempo lento: llega a RPE 8.</p>' : ''}
       ${o.min ? `<p class="small muted opt-note">Recortado de ${s.full} a ~${s.duration} min: primero bajan series y salen accesorios pequeños; el cuádriceps, un empuje y un tirón siempre se quedan.</p>` : s.full > s.duration ? `<p class="small muted opt-note">El plan completo de hoy suma ~${s.full} min; se acotó a ${s.duration} (tu máximo es 1:15) quitando accesorios pequeños.</p>` : ''}
     </section>`;
   }
@@ -675,10 +675,10 @@
   function swapBox(item, date) {
     const cur = EX.BY[item.id], s = PROG.session(date), key = item.swappedFrom || item.ladderFrom || item.id;
     const pat = patternOf(cur), home = s && s.where === 'home';
-    const cands = EX.LIST.filter((e) => e.id !== item.id && !e.auth && patternOf(e) === pat && (!home || PROG.homeOk(e)))
+    const cands = EX.LIST.filter((e) => e.id !== item.id && !e.auth && patternOf(e) === pat && (home ? PROG.homeOk(e) : PROG.gymOk(e)))
       .map((e) => ({ e, sc: e.tags.filter((t) => cur.tags.includes(t)).length + (e.tags[0] === cur.tags[0] ? 3 : 0) + (e.uni === cur.uni ? 1 : 0) }))
       .sort((a, b) => b.sc - a.sc).slice(0, 8);
-    return `<details class="card swap-box"${item.swappedFrom ? ' open' : ''}><summary>${ico('swap')}<b>Cambiar ejercicio</b><span class="muted small">Máquina ocupada o no te late: elige otro del mismo patrón. Se recuerda para los próximos días.</span></summary>
+    return `<details class="card swap-box"${item.swappedFrom ? ' open' : ''}><summary>${ico('swap')}<b>Cambiar ejercicio</b><span class="muted small">Máquina ocupada o no te late: elige otro del mismo patrón${home ? ' (peso corporal o bandas)' : ' (sin bandas: en el gym no hay)'}. Se recuerda para los próximos días.</span></summary>
       ${item.swappedFrom ? `<button class="btn btn-ghost btn-block" data-act="unswap" data-from="${item.swappedFrom}">Volver a ${esc(EX.BY[item.swappedFrom].n)}</button>` : ''}
       <div class="swap-list">${cands.map(({ e }) => `<button class="px" data-act="swap" data-date="${date}" data-from="${key}" data-to="${e.id}"><span class="item-thumb">${thumb(e.id)}</span><span><b>${esc(e.n)}</b><span class="muted small">${esc(e.es)} · ${esc(e.eq)}</span></span></button>`).join('') || '<p class="muted small">No hay otra opción del mismo patrón.</p>'}</div></details>`;
   }
