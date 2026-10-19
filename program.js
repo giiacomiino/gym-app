@@ -98,56 +98,51 @@
   const S = (code, type, ex, note) => ({ code, type, ex, note });
   const QUAD2 = 'Segundo ejercicio de cuádriceps del día.';
 
-  const DAYS = {
-    1: {
-      kind: 'gym', title: 'Fuerza pierna A + torso', sub: 'Dominante de rodilla · pecho, espalda, hombro y tríceps',
+  // Tres sesiones full body por semana, en orden A → B → C el día que vayas, más un Extra opcional.
+  // Cada una cubre cuádriceps, isquios/glúteo, empuje, tirón y core para que 3 días alcancen.
+  const MAIN = 'Ejercicio principal: progresa la carga aquí.';
+  const TYPES = {
+    A: {
+      title: 'Sesión A · Rodilla + torso', sub: 'Cuádriceps e isquios · pecho, espalda y tríceps', imp: 2,
       blocks: [
-        ['A', S('A1', 'main', { 1: ['leg_press'] }, 'Ejercicio principal: progresa la carga aquí.'), S('A2', 'upper', { 1: ['chest_press', 'db_bench'], 2: ['db_bench', 'incline_db'], 5: ['db_bench'] })],
+        ['A', S('A1', 'main', { 1: ['leg_press'] }, MAIN), S('A2', 'upper', { 1: ['chest_press', 'db_bench'], 2: ['db_bench', 'incline_db'], 5: ['db_bench'] })],
         ['B', S('B1', 'uni', { 1: ['split_squat_assisted', 'low_step_up'], 2: ['split_squat', 'step_up'], 3: ['bulgarian_split_squat', 'step_up'], 5: ['split_squat'] }), S('B2', 'upper', { 1: ['lat_pulldown', 'neutral_pulldown'] })],
-        ['C', S('C1', 'acc', { 1: ['sl_leg_extension'] }, 'Prueba clave de simetría de cuádriceps.'), S('C2', 'small', { 1: ['lateral_raise', 'face_pull'] }), S('C3', 'small', { 1: ['rope_pushdown', 'oh_cable_ext'], 3: ['oh_cable_ext', 'cable_tri_ext'] })],
-        ['D', S('D1', 'iso', { 1: ['spanish_squat'], 4: ['ski_hold', 'spanish_squat'], 5: ['spanish_squat'] }, 'Isométrico de cuádriceps: aguanta la postura el tiempo indicado.'), S('D2', 'core', { 1: ['dead_bug', 'plank'], 2: ['dead_bug_w', 'pallof'], 3: ['dead_bug_w', 'side_plank'] }), S('D3', 'small', { 1: ['standing_calf', 'seated_calf'], 3: ['sl_calf', 'standing_calf'] })]
+        ['C', S('C1', 'acc', { 1: ['sl_leg_extension'] }, 'Prueba clave de simetría de cuádriceps.'), S('C2', 'acc', { 1: ['seated_leg_curl', 'lying_leg_curl'], 2: ['sl_leg_curl', 'seated_leg_curl'], 3: ['sl_leg_curl', 'slider_curl'], 5: ['seated_leg_curl'] }), S('C3', 'small', { 1: ['rope_pushdown', 'oh_cable_ext'], 3: ['oh_cable_ext', 'cable_tri_ext'] })],
+        ['D', S('D1', 'iso', { 1: ['spanish_squat'], 4: ['ski_hold', 'spanish_squat'], 5: ['spanish_squat'] }, 'Isométrico de cuádriceps: aguanta la postura el tiempo indicado.'), S('D2', 'core', { 1: ['dead_bug', 'plank'], 2: ['dead_bug_w', 'pallof'], 3: ['dead_bug_w', 'side_plank'] }), S('D3', 'small', { 1: ['standing_calf', 'tib_raise'], 3: ['sl_calf', 'tib_raise'] })]
       ]
     },
-    2: {
-      kind: 'kb', title: 'Full body kettlebell A', sub: 'Una KB + banda: bisagra, sentadilla, empuje, tirón, core y equilibrio',
+    B: {
+      title: 'Sesión B · Cadera + torso', sub: 'Glúteo e isquios + cuádriceps · espalda, hombro y bíceps', imp: 4,
       blocks: [
-        ['A', S('A1', 'kb', { 1: ['kb_deadlift'], 2: ['kb_rdl'], 5: ['kb_deadlift'] }), S('A2', 'kb', { 1: ['sa_kb_floor_press', 'push_up'], 2: ['hk_kb_press', 'push_up'] })],
-        ['B', S('B1', 'kb', { 1: ['goblet_squat'], 3: ['goblet_squat', 'lateral_lunge'], 4: ['lateral_lunge', 'goblet_squat'], 5: ['goblet_squat'] }), S('B2', 'kb', { 1: ['kb_row'] })],
-        ['C', S('C1', 'stab', { 1: ['sl_balance_reach', 'star_excursion'], 2: ['star_excursion', 'y_balance'], 3: ['y_balance', 'star_excursion'], 4: ['y_balance', 'unstable_balance'], 5: ['y_balance'] }), S('C2', 'core', { 1: ['pallof', 'kb_halo'] }, 'Pallof con banda anclada a un poste.')],
-        ['D', S('D1', 'carry', { 1: ['kb_suitcase'] }), S('D2', 'core', { 1: ['dead_bug', 'side_plank'], 2: ['side_plank', 'bird_dog'], 3: ['side_plank', 'bear_plank'], 5: ['bird_dog'] }), S('D3', 'small', { 1: ['tib_raise', 'ankle_eversion'] })]
+        ['A', S('A1', 'main', { 1: ['db_rdl'], 2: ['rdl'], 5: ['db_rdl'] }, MAIN), S('A2', 'upper', { 1: ['cable_row', 'cs_db_row'] })],
+        ['B', S('B1', 'main', { 1: ['hip_thrust'], 3: ['hip_thrust', 'sl_hip_thrust'], 5: ['hip_thrust'] }), S('B2', 'upper', { 1: ['shoulder_press', 'db_shoulder_press'], 2: ['db_shoulder_press', 'hk_kb_press'] })],
+        ['C', S('C1', 'uni', { 1: ['step_down'], 2: ['step_down', 'reverse_step_down'], 3: ['step_down', 'lateral_step_down'], 4: ['lateral_step_down', 'step_down'], 5: ['step_down'] }, QUAD2 + ' Sirve cualquier escalón: rodilla alineada.'), S('C2', 'small', { 1: ['rear_delt_fly', 'face_pull'] }), S('C3', 'small', { 1: ['db_curl', 'hammer_curl'], 3: ['incline_curl', 'hammer_curl'] })],
+        ['D', S('D1', 'acc', { 1: ['hip_adductor', 'hip_abductor'], 3: ['copenhagen', 'hip_abductor'], 5: ['hip_abductor'] }), S('D2', 'core', { 1: ['pallof', 'side_plank'], 2: ['side_plank', 'bird_dog'], 3: ['tgu', 'side_plank'], 5: ['side_plank'] }), S('D3', 'carry', { 1: ['kb_suitcase', 'kb_front_rack'] })]
       ],
       ski: { 4: [S('E1', 'uni', { 4: ['lateral_step_up'] }), S('E2', 'iso', { 4: ['ski_hold'] })], 5: [S('E1', 'iso', { 5: ['ski_hold'] })] }
     },
-    3: {
-      kind: 'gym', title: 'Fuerza pierna B + torso', sub: 'Dominante de cadera + cuádriceps · espalda, hombro y bíceps',
+    C: {
+      title: 'Sesión C · Atlético', sub: 'Sentadilla y una pierna · torso completo y cardio', imp: 5,
       blocks: [
-        ['A', S('A1', 'main', { 1: ['db_rdl'], 2: ['rdl'], 5: ['db_rdl'] }, 'Ejercicio principal: progresa la carga aquí.'), S('A2', 'upper', { 1: ['cable_row', 'cs_db_row'] })],
-        ['B', S('B1', 'main', { 1: ['hip_thrust'], 3: ['hip_thrust', 'sl_hip_thrust'], 5: ['hip_thrust'] }), S('B2', 'upper', { 1: ['shoulder_press', 'db_shoulder_press'], 2: ['db_shoulder_press', 'shoulder_press'] })],
-        ['C', S('C1', 'acc', { 1: ['seated_leg_curl', 'lying_leg_curl'], 2: ['sl_leg_curl', 'seated_leg_curl'], 3: ['sl_leg_curl', 'slider_curl'], 5: ['seated_leg_curl'] }), S('C2', 'small', { 1: ['rear_delt_fly', 'face_pull'] }), S('C3', 'small', { 1: ['db_curl', 'hammer_curl'], 3: ['incline_curl', 'hammer_curl'] })],
-        ['D', S('D1', 'acc', { 1: ['leg_extension', 'reverse_step_down'], 2: ['reverse_step_down', 'leg_extension'], 3: ['reverse_step_down', 'sl_squat_assisted'], 5: ['leg_extension'] }, QUAD2), S('D2', 'acc', { 1: ['hip_adductor', 'hip_abductor'], 3: ['copenhagen', 'hip_abductor'], 5: ['hip_abductor'] }), S('D3', 'core', { 1: ['side_plank', 'bird_dog'], 2: ['pallof', 'side_plank'], 5: ['side_plank'] })]
-      ]
-    },
-    4: {
-      kind: 'kb', title: 'Full body kettlebell B', sub: 'Una KB + banda: unilateral, empuje, tirón y anti-rotación',
-      blocks: [
-        ['A', S('A1', 'uni', { 1: ['sl_rdl'] }, 'Pierna izquierda primero.'), S('A2', 'kb', { 1: ['push_up', 'sa_kb_floor_press'], 2: ['sa_kb_floor_press', 'hk_kb_press'] })],
-        ['B', S('B1', 'uni', { 1: ['step_down'], 2: ['step_down', 'reverse_step_down'], 3: ['step_down', 'lateral_step_down'], 4: ['lateral_step_down', 'step_down'], 5: ['step_down'] }, 'Sirve cualquier escalón. Calidad sobre altura: rodilla alineada.'), S('B2', 'kb', { 1: ['kb_row'] })],
-        ['C', S('C1', 'stab', { 1: ['band_lateral_walk', 'monster_walk'], 2: ['monster_walk', 'band_abduction'], 3: ['band_abduction', 'band_lateral_walk'] }), S('C2', 'core', { 1: ['kb_atw', 'kb_chest_pass'], 3: ['kb_atw', 'kb_halo'] })],
-        ['D', S('D1', 'carry', { 1: ['kb_front_rack', 'kb_suitcase'] }), S('D2', 'core', { 1: ['bird_dog', 'bear_plank'], 2: ['bear_plank', 'dead_bug_w'], 3: ['tgu'], 5: ['bird_dog'] }), S('D3', 'iso', { 1: ['side_plank'], 2: ['copenhagen', 'side_plank'], 3: ['ski_hold', 'copenhagen'], 5: ['side_plank'] })]
-      ],
-      ski: { 4: [S('E1', 'uni', { 4: ['lateral_lunge'] }), S('E2', 'stab', { 4: ['unstable_balance'] })], 5: [S('E1', 'stab', { 5: ['sl_balance_reach'] })] }
-    },
-    5: {
-      kind: 'gym', title: 'Full body fuerza', sub: 'Sentadilla, unilateral y torso completo: pecho, espalda y brazos',
-      blocks: [
-        ['A', S('A1', 'main', { 1: ['goblet_box'], 2: ['goblet_squat'], 3: ['box_squat'], 5: ['goblet_squat'] }, 'Ejercicio principal: progresa la carga aquí.'), S('A2', 'upper', { 1: ['incline_chest_press', 'incline_db'], 2: ['incline_db', 'push_up'], 5: ['incline_db'] })],
+        ['A', S('A1', 'main', { 1: ['goblet_box'], 2: ['goblet_squat'], 3: ['box_squat'], 5: ['goblet_squat'] }, MAIN), S('A2', 'upper', { 1: ['incline_chest_press', 'incline_db'], 2: ['incline_db', 'push_up'], 5: ['incline_db'] })],
         ['B', S('B1', 'uni', { 1: ['sl_leg_press'] }, 'Prueba clave de simetría: compara ambos lados.'), S('B2', 'upper', { 1: ['db_row', 'kb_row'] })],
-        ['C', S('C1', 'uni', { 1: ['sl_glute_bridge'], 2: ['reverse_lunge', 'sl_hip_thrust'], 4: ['reverse_lunge'], 5: ['sl_glute_bridge'] }), S('C2', 'small', { 1: ['db_oh_ext', 'rope_pushdown'], 2: ['cg_push_up', 'oh_cable_ext'], 5: ['rope_pushdown'] }), S('C3', 'small', { 1: ['hammer_curl', 'cable_curl'] })],
-        ['D', S('D1', 'small', { 1: ['tib_raise', 'seated_calf'] }), S('D2', 'carry', { 1: ['kb_farmer', 'kb_suitcase'] }), S('D3', 'small', { 1: ['lateral_raise', 'face_pull'] })]
+        ['C', S('C1', 'uni', { 1: ['sl_rdl'] }, 'Pierna izquierda primero.'), S('C2', 'stab', { 1: ['sl_balance_reach', 'star_excursion'], 2: ['star_excursion', 'y_balance'], 3: ['y_balance', 'star_excursion'], 4: ['y_balance', 'unstable_balance'], 5: ['y_balance'] }), S('C3', 'small', { 1: ['lateral_raise', 'face_pull'] })],
+        ['D', S('D1', 'core', { 1: ['bird_dog', 'bear_plank'], 2: ['bear_plank', 'kb_halo'], 3: ['kb_atw', 'bear_plank'], 5: ['bird_dog'] }), S('D2', 'carry', { 1: ['kb_farmer', 'kb_suitcase'] })]
       ],
       ski: { 3: [S('E1', 'iso', { 3: ['ski_hold'] })], 4: [S('E1', 'iso', { 4: ['ski_hold'] }), S('E2', 'stab', { 4: ['band_lateral_walk'] })] }
+    },
+    X: {
+      title: 'Extra opcional', sub: 'Core, equilibrio y tobillo · en casa o en el gym', imp: 'X', extra: true,
+      blocks: [
+        ['A', S('A1', 'stab', { 1: ['sl_balance_reach', 'star_excursion'], 3: ['y_balance', 'unstable_balance'] }), S('A2', 'core', { 1: ['dead_bug', 'bird_dog'], 2: ['side_plank', 'bear_plank'] })],
+        ['B', S('B1', 'iso', { 1: ['wall_sit'], 3: ['ski_hold', 'wall_sit'] }), S('B2', 'small', { 1: ['sl_calf', 'tib_raise'] })],
+        ['C', S('C1', 'acc', { 1: ['side_lying_raise'], 3: ['copenhagen', 'side_lying_raise'] }), S('C2', 'core', { 1: ['plank', 'superman'], 2: ['superman', 'side_plank'] })]
+      ]
     }
   };
+  const ABC = ['A', 'B', 'C'];
+  const PLAN_DOW = { 1: 'A', 3: 'B', 5: 'C' }; // sugerencia para días futuros y para las gráficas del plan
+  const MIGRATE = '2026-10-19'; // antes de esta fecha la rutina era de 5 días fijos
 
   /* ---------- Ruta de impacto: etapas con prueba para avanzar ---------- */
   const IMPACT = [
@@ -414,24 +409,27 @@
 
   const MUSCLE_ORDER = ['quads', 'hams', 'glutes', 'adductors', 'abductors', 'calves', 'core', 'chest', 'back', 'shoulders', 'biceps', 'triceps', 'balance', 'stability'];
 
-  /* ---------- Sesión base (solo calendario; se guarda en caché) ---------- */
-  const baseCache = {};
-  function baseSession(date) {
-    if (baseCache[date]) return baseCache[date];
+  /* ---------- Sesiones (plantilla por fecha y tipo; se guardan en caché) ---------- */
+  const KINDS = {
+    travel: ['Viaje de esquí', 'Evaluación final por traumatólogo/fisioterapeuta antes de esquiar'],
+    rest: ['Descanso', 'Recuperación total. Dormir bien también es entrenar.'],
+    recovery: ['Recovery Saturday', 'Opcional · bici suave, caminata, movilidad o fisio'],
+    off: ['Día libre', '']
+  };
+  const tplCache = {};
+  function templateSession(date, type) {
+    const key = date + '|' + type;
+    if (tplCache[key]) return tplCache[key];
     if (!inProgram(date)) return null;
-    const d = parse(date), dow = d.getDay();
+    const dow = parse(date).getDay();
     const ph = phaseOf(date), phase = ph.n, wk = weekOf(date);
     const deload = DELOAD_WEEKS.includes(wk);
     const wip = wk - weekOf(ph.start);
-    const base = { date, dow, phase, week: wk, deload };
+    const base = { date, dow, phase, week: wk, deload, type };
     let s;
-    if (date === END) {
-      s = Object.assign(base, { kind: 'travel', title: 'Viaje de esquí', sub: 'Evaluación final por traumatólogo/fisioterapeuta antes de esquiar', duration: 0, level: 0 });
-    } else if (dow === 0) {
-      s = Object.assign(base, { kind: 'rest', title: 'Descanso', sub: 'Recuperación total. Dormir bien también es entrenar.', duration: 0, level: 0 });
-    } else if (dow === 6) {
-      s = Object.assign(base, { kind: 'recovery', title: 'Recovery Saturday', sub: 'Opcional · bici suave, caminata, movilidad o fisio', duration: 30, level: 1 });
-    } else if (date === '2027-02-12') {
+    if (KINDS[type]) {
+      s = Object.assign(base, { kind: type, title: KINDS[type][0], sub: KINDS[type][1], duration: type === 'recovery' ? 30 : 0, level: type === 'recovery' ? 1 : 0, muscles: [] });
+    } else if (date >= '2027-02-12' && type !== 'X') {
       s = Object.assign(base, {
         kind: 'gym', title: 'Activación pre-viaje', sub: 'Sesión corta: moverse bien, nada pesado', level: 1, short: true,
         warmup: WARMUP.gym.slice(0, 3).map(([id, n, dose]) => ({ id, n, dose })),
@@ -443,28 +441,28 @@
         ski: []
       });
     } else {
-      const T = DAYS[dow];
-      const lightTue = wk === 20 && (dow === 2 || dow === 4);
+      const T = TYPES[type];
       const blocks = T.blocks.map(([code, ...slots]) => ({ code, items: slots.map((sl) => resolveSlot(sl, phase, wip, deload, wk)).filter(Boolean) })).filter((b) => b.items.length);
-      if (lightTue) blocks.splice(2);
       const ski = ((T.ski || {})[phase] || []).map((sl) => resolveSlot(sl, phase, wip, deload, wk)).filter(Boolean);
       s = Object.assign(base, {
-        kind: T.kind, title: T.title, sub: T.sub, level: levelFor(T.kind, phase, deload || lightTue), short: lightTue,
-        warmup: (WARMUP[T.kind] || []).concat(phase >= 2 && T.kind === 'gym' ? [['step_down', 'Step-down lento', '5/lado']] : []).map(([id, n, dose]) => ({ id, n, dose })),
+        kind: T.extra ? 'extra' : 'gym', title: T.title, sub: T.sub, level: T.extra ? 1 : levelFor('gym', phase, deload),
+        warmup: (T.extra ? WARMUP.home.slice(0, 4) : WARMUP.gym.concat(phase >= 2 ? [['step_down', 'Step-down lento', '5/lado']] : [])).map(([id, n, dose]) => ({ id, n, dose })),
         blocks, ski
       });
     }
-    if (!s.blocks) s.muscles = [];
-    baseCache[date] = s;
+    tplCache[key] = s;
     return s;
   }
+  // el plan del calendario (A lunes, B miércoles, C viernes): para gráficas y la vista de fases
+  const planType = (date) => (date === END ? 'travel' : PLAN_DOW[parse(date).getDay()] || ({ 6: 'recovery', 0: 'rest' })[parse(date).getDay()] || 'off');
+  const baseSession = (date) => templateSession(date, planType(date));
 
   /* ---------- Estado personal (lo pone app.js) ---------- */
-  let ST = { fb: {}, swaps: {}, gates: {}, days: {}, today: null };
+  let ST = { fb: {}, swaps: {}, gates: {}, days: {}, log: {}, active: {}, today: null };
   let FBI = {}, FBL = {}, VER = 0;
   const pcache = new Map();
   function setState(st) {
-    ST = Object.assign({ fb: {}, swaps: {}, gates: {}, days: {}, today: null }, st);
+    ST = Object.assign({ fb: {}, swaps: {}, gates: {}, days: {}, log: {}, active: {}, today: null }, st);
     FBI = {}; FBL = {};
     Object.keys(ST.fb).sort().forEach((date) => {
       Object.values(ST.fb[date] || {}).forEach((e) => {
@@ -474,9 +472,37 @@
         if (LADDER_OF[e.id] != null) (FBL[LADDER_OF[e.id]] = FBL[LADDER_OF[e.id]] || []).push(ev);
       });
     });
-    VER++; pcache.clear();
+    VER++; pcache.clear(); SCHED = null;
   }
   const nowDate = () => ST.today || today();
+
+  /* ---------- Qué sesión toca cada día ---------- */
+  // Días pasados: lo que hiciste (log; antes de MIGRATE, los días con marcas cuentan en orden A→B→C).
+  // Hoy: la siguiente del orden, o el Extra si ya llevas 3 esta semana.
+  // Días futuros: sugerencia lunes/miércoles/viernes siguiendo el orden, hasta 3 por semana.
+  let SCHED = null;
+  function schedule() {
+    if (SCHED) return SCHED;
+    const t = nowDate(), map = {}, wc = {};
+    let idx = 0;
+    const take = (d, ty) => {
+      map[d] = ty;
+      if (ABC.includes(ty)) { idx = (ABC.indexOf(ty) + 1) % 3; const w = weekOf(d); wc[w] = (wc[w] || 0) + 1; }
+    };
+    for (let d = START; d <= END; d = addDays(d, 1)) {
+      const dow = parse(d).getDay(), w = weekOf(d), act = ST.active[d];
+      if (d === END) map[d] = 'travel';
+      else if (ST.log[d]) take(d, ST.log[d]);
+      else if (d < MIGRATE && act === 'w' && dow >= 1 && dow <= 5) take(d, ABC[idx]);
+      else if (d < t) map[d] = act === 'r' ? 'recovery' : 'off';
+      else if (d === t) take(d, (wc[w] || 0) < 3 ? ABC[idx] : 'X');
+      else if (PLAN_DOW[dow] && (wc[w] || 0) < 3) take(d, ABC[idx]);
+      else map[d] = dow === 6 ? 'recovery' : dow === 0 ? 'rest' : 'off';
+    }
+    return (SCHED = map);
+  }
+  const typeOf = (date) => schedule()[date] || null;
+  const weekDone = (date) => { const w = weekOf(date), m = schedule(); let n = 0; for (const d in m) if (weekOf(d) === w && ABC.includes(m[d]) && (ST.log[d] || (d < MIGRATE && ST.active[d] === 'w'))) n++; return n; };
 
   /* ---------- Ruta de impacto: etapa vigente ---------- */
   // Hasta hoy: la etapa avanza solo con la prueba aprobada (y no antes de su fecha, salvo la 1 con luz verde).
@@ -506,11 +532,21 @@
   const BY = () => window.EX.BY;
   function mkItem(code, id, type, rx, extra) { return Object.assign({ code, id, type, rx }, extra || {}); }
 
-  function impactItems(s, where) {
-    const k = stageAt(s.date), plan = IMP[k], taper = s.date >= TAPER_FROM, out = { pre: [], post: [] };
+  // la etapa según el calendario (para el plan y la vista de fases)
+  const calStage = (date) => { let k = 0; for (let i = 1; i < IMPACT.length; i++) if (date >= IMPACT[i].from) k = i; return k; };
+  // Extra: cardio suave según la etapa
+  const IMP_X = {
+    1: { post: [['jump_rope', R(4, '30 s', '5', '30 s', IV(30, 30, 4, 'Salta', 'Descansa')), 'pogo']] },
+    2: { post: [['easy_run', R(1, '20 min', '4', '—', IV(1200, 0, 1, 'Trote suave', '')), 'walk_run']] }
+  };
+  IMP_X[3] = IMP_X[4] = IMP_X[2];
+  function impactItems(s, where, k) {
+    const T = TYPES[s.type], taper = s.date >= TAPER_FROM, out = { pre: [], post: [] };
+    if (!T || s.short) return out;
+    const plan = T.imp === 'X' ? IMP_X[k] : IMP[k] && { pre: (IMP[k].pre || {})[T.imp], post: (IMP[k].post || {})[T.imp] };
     if (!plan) return out;
     ['pre', 'post'].forEach((when) => {
-      ((plan[when] || {})[s.dow] || []).forEach(([id, rx0, alt], i) => {
+      (plan[when] || []).forEach(([id, rx0, alt], i) => {
         let use = id, swapped = false;
         if (painRecent(s.date, id, 14) && alt) { use = alt; swapped = true; }
         if (where === 'home' && !homeOk(BY()[use])) use = (HOME[use] || []).find((h) => homeOk(BY()[h]) && (k >= 1 || !BY()[h].auth)) || 'glute_bridge';
@@ -607,19 +643,20 @@
 
   // sin elección, la sesión completa se acota a ~75 min (lo que sale primero: accesorios pequeños)
   const DEFAULT_MIN = 75;
-  const HOME_SUB = { 1: 'cuádriceps + pecho, espalda, hombro y tríceps', 2: 'cuerpo completo', 3: 'cadera y cuádriceps + espalda, hombro y bíceps', 4: 'unilateral + empuje y tirón', 5: 'cuerpo completo' };
+  const HOME_SUB = { A: 'cuádriceps e isquios + pecho, espalda y tríceps', B: 'cadera y cuádriceps + espalda, hombro y bíceps', C: 'cuerpo completo y cardio' };
   function session(date) {
     const hit = pcache.get(date);
     if (hit) return hit;
-    const b = baseSession(date);
+    const ty = typeOf(date);
+    const b = ty && templateSession(date, ty);
     if (!b) return null;
     if (!b.blocks) { pcache.set(date, b); return b; }
     const s = JSON.parse(JSON.stringify(b));
     const opt = ST.days[date] || {}, where = opt.where === 'home' ? 'home' : 'gym';
-    s.where = where; s.target = opt.min || DEFAULT_MIN; s.chosen = !!opt.min;
-    const imp = impactItems(s, where);
-    s.imp = imp.pre; s.cond = imp.post;
+    s.where = where; s.target = opt.min || (s.kind === 'extra' ? 40 : DEFAULT_MIN); s.chosen = !!opt.min;
     s.stage = stageAt(date);
+    const imp = impactItems(s, where, s.stage);
+    s.imp = imp.pre; s.cond = imp.post;
     const items = () => [...s.blocks.flatMap((x) => x.items), ...s.ski];
     const reRx = (it, id) => { it.id = id; it.rx = rxFor(it.type, BY()[id], s.phase, s.deload, s.week); };
 
@@ -666,9 +703,20 @@
     const count = {};
     allItems(s).forEach((it) => { BY()[it.id].tags.forEach((t) => { count[t] = (count[t] || 0) + 1; }); });
     s.muscles = MUSCLE_ORDER.filter((m) => count[m]).sort((a, c) => count[c] - count[a]).slice(0, 4);
-    if (where === 'home') { s.sub = 'En casa, sin equipo · ' + HOME_SUB[s.dow]; if (s.kind === 'kb') s.title = s.title.replace('kettlebell', 'en casa'); }
+    if (where === 'home' && s.kind === 'gym' && !s.short) s.sub = 'En casa, sin equipo · ' + HOME_SUB[s.type];
     pcache.set(date, s);
     return s;
+  }
+
+  // plan del calendario con la ruta de impacto por fecha (sin tus ajustes)
+  const planCache = {};
+  function planSession(date) {
+    if (planCache[date]) return planCache[date];
+    const b = baseSession(date);
+    if (!b || !b.blocks) return (planCache[date] = b);
+    const s = Object.assign({}, b), imp = impactItems(s, 'gym', calStage(date));
+    s.imp = imp.pre; s.cond = imp.post;
+    return (planCache[date] = s);
   }
 
   function allItems(s) {
@@ -724,7 +772,7 @@
 
   window.PROG = {
     SURGERY, START, END, WEEK1, PHASES, DELOAD_WEEKS, TOTAL_WEEKS, LEVELS, MILESTONES, READINESS, RECOVERY, MOBILITY, IMPACT, TAPER_FROM, LOADS, HOME_EQ,
-    session, baseSession, DEFAULT_MIN, allItems, loadFor, growth, nextUp, stepOf, homeOk, stageAt, gateDue, setState, restSecOf, topNum,
+    session, baseSession, planSession, typeOf, weekDone, ABC, DEFAULT_MIN, allItems, loadFor, growth, nextUp, stepOf, homeOk, stageAt, gateDue, setState, restSecOf, topNum,
     setProfile: (p) => { PROFILE = Object.assign({}, PROFILE, p); pcache.clear(); }, getProfile: () => PROFILE,
     parse, fmt, addDays, diffDays, today, weekOf, phaseOf, inProgram
   };

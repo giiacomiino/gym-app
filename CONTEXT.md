@@ -30,6 +30,7 @@ App web personal (PWA) de entrenamiento de Giacomo para **terminar de rehabilita
 - Quiere **alternativas** cuando no puede ir al gym: en casa **no tiene ningún equipo** (solo peso corporal, silla, mesa, toalla, puerta).
 - Siente **más cansada la pierna derecha** con los mismos pesos (probable compensación en bilaterales / inhibición del cuádriceps izquierdo): se agregó "+1 serie izquierda" en cuádriceps unilateral.
 - Aún **sin luz verde para trotar** (oct 2026); la etapa 1 de impacto incluye esa luz verde en su prueba.
+- **Realidad: va ~3 días por semana, no 5** (dicho el 19 oct 2026), en días variables por trabajo y vida. → Desde el 19 oct el programa es **3 sesiones full body A/B/C en orden** (la siguiente el día que vaya) + **Extra opcional** cuando ya hizo 3 en la semana. Máximo 1:15 por sesión.
 - **No quiere un flujo centrado en autorizaciones del doctor.** Se quitaron los toggles de autorización; el trabajo dinámico entra por calendario (semana 8) con una alternativa por ejercicio.
 - Quiere **pesos sugeridos** en **kg y lb** (su gym tiene máquinas en ambas unidades).
 - Martes y jueves (los "días de movilidad/estabilidad") deben ser **full body con una kettlebell** (+ banda + peso corporal), sin máquinas.
@@ -47,7 +48,7 @@ HTML/JS estático, **sin build ni dependencias**. Todo corre en el navegador.
 | `exercises.js` | **Biblioteca de 114 ejercicios** (`window.EX = { LIST, BY, TAGS, TAG_ES, AUTH }`). Cada uno: `id, n` (nombre), `es` (nombre en español), `tags`, `eq`, `uni`, `unit` (`reps/time/dist/cm`), `lvl`, `sp` (especial ⭐), `auth` (categoría dinámica: impact/explosive/lateral/cod), `start, move, mus, err[], safe[], reg, prog, why?`, `fig` (keyframes + props), `q` (URL de búsqueda en YouTube). |
 | `program.js` | **El programa**: fases, plantillas semanales, rotación, prescripciones, trabajo dinámico, **pesos sugeridos**, hitos, readiness, opciones de sábado. Expone `window.PROG`. |
 | `app.js` | UI: router por hash, vistas, checkboxes en `localStorage`, gráficas SVG hechas a mano, temporizador de descanso, sheet de ejercicio con animación. |
-| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v6`. |
+| `sw.js` | Service worker: shell en caché (offline), red primero para archivos propios, caché para Google Fonts. **Subir la versión de `CACHE` (`gymapp-vN`) en cada cambio** para que los teléfonos tomen la nueva versión. Actual: `gymapp-v7`. |
 | `manifest.webmanifest` | PWA (start_url `./#hoy`, standalone, íconos). |
 | `icons/` | `icon.svg`, `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` (generados con Playwright desde el SVG). |
 | `.nojekyll` | Para que GitHub Pages sirva tal cual. |
@@ -71,7 +72,7 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
   4. **Fuerza + preparación específica** (ene) — 4×5–6 + bloque SKI PREP
   5. **Puesta a punto** (1–15 feb) — 2–3×5–8, RPE 6–7. Vie 12 feb = "Activación pre-viaje" corta.
 - **Semanas de descarga:** 9 (23 nov) y 14 (28 dic): una serie menos, carga ×0.85. Semana 20: carga ×0.92 y martes/jueves cortos.
-- **Semana tipo (formato A1+A2 … D1+D2, ~60 min):**
+- **(Histórico hasta el 19 oct 2026, ver §5a) Semana tipo (formato A1+A2 … D1+D2, ~60 min):**
   - **Lun – Fuerza pierna A + torso** (rodilla dominante): A1 leg press · A2 pecho · B1 unilateral · B2 jalón · C1 single-leg extension · C2 hombro · D1 pantorrilla · D2 core · finisher Spanish squat (F4: ski hold).
   - **Mar – Full body kettlebell A** (una KB + banda): KB deadlift/RDL · press de piso a un brazo / lagartijas / half-kneeling press · goblet squat (F3–4 lateral lunge) · KB row · equilibrio (star/Y-balance) · Pallof con banda / halo · suitcase carry · core · tibial + tobillo.
   - **Mié – Fuerza pierna B + torso** (cadera dominante): A1 DB RDL → RDL con barra · A2 remo · B1 hip thrust · B2 press hombro · C1 leg curl · C2 deltoide posterior · D1 aductor/abductor (F3: Copenhagen) · D2 bíceps · finisher equilibrio.
@@ -94,6 +95,13 @@ Pestañas inferiores: Inicio · Calendario · **Hoy** (botón central) · Ejerci
 
 ### Hitos (MILESTONES)
 1 oct inicio · 30 oct revisión sugerida con fisio · 1 nov F2 · **12 nov ventana box (hasta 26 nov)** · **16 nov semana 8: dinámico** · 23 nov descarga · 1 dic F3 · 28 dic descarga · 1 ene F4 · 1 feb F5 · 10 feb evaluación final con traumatólogo/fisio · 15 feb viaje.
+
+## 5a. Formato 3 días (19 oct 2026) — reemplaza la semana tipo L–V de §5
+- `TYPES` = **A · Rodilla + torso** (leg press, unilateral cuádriceps, pecho, jalón, sl leg extension, leg curl, tríceps, isométrico cuádriceps, core, pantorrilla/tibial; impacto de los martes), **B · Cadera + torso** (RDL, hip thrust, remo, press hombro, step-down = 2º cuádriceps, deltoide posterior, bíceps, aductor, core, carry; impacto de los jueves; SKI PREP F4–F5), **C · Atlético** (sentadilla, press inclinado, sl leg press, remo, sl RDL, equilibrio, elevaciones laterales, core, farmer; impacto y cardio de los viernes; SKI PREP F3–F4), **X · Extra** (equilibrio, core, wall sit/ski hold, pantorrilla/tibial, Copenhagen; cardio suave según etapa; tope 40 min).
+- `schedule()` decide el tipo de cada fecha: `ST.log[fecha]` (se registra al primer toque: palomita, respuesta, vuelta o terminar; se borra si queda vacío) → antes de `MIGRATE = 2026-10-19` los días L–V con marcas cuentan en orden → días pasados sin nada = `off` (o `recovery`) → **hoy** = siguiente de A→B→C, o `X` si ya hay 3 esa semana → futuro = sugerencia lun/mié/vie hasta 3 por semana.
+- `templateSession(fecha, tipo)` (caché) · `baseSession(fecha)` = plan lun A / mié B / vie C (para gráficas) · `planSession` = plan + impacto por calendario (vista de fases) · `session(fecha)` = la real personalizada.
+- Desde el 12 feb cualquier sesión es "Activación pre-viaje".
+- Avance: meta 3 por semana (2 en la semana 1) = 59 en total; racha = semanas seguidas cumpliendo la meta; calendario con días "libres" y "sugeridos".
 
 ## 5b. Personalización (14 oct 2026) — program.js
 - **Plantillas:** sin finishers. Lun D = isométrico de cuádriceps (Spanish squat / ski hold) + core + pantorrilla, C3 tríceps. Mié D1 = 2º cuádriceps (leg extension / reverse step-down), C3 bíceps, D3 core. Vie C3 bíceps, D3 hombro. Mar/Jue D3 tibial / plancha lateral-Copenhagen. Cada día de pierna ≥2 ejercicios de cuádriceps.
@@ -163,6 +171,7 @@ Galería de todas las figuras: crear un HTML temporal que cargue `figures.js` + 
 5. Header sticky fuera; martes/jueves full body con KB; kg + lb.
 6. Header eliminado por completo (se encimaba con la barra de estado); módulo **Fases**.
 7. (14 oct 2026) Timers con sonido, modo Casa/duración/⇄, retroalimentación de un toque que ajusta pesos y variantes, ruta de impacto por etapas con pruebas, más cuádriceps y torso completo, sin finishers.
+8. (19 oct 2026) Va ~3 días/semana → sesiones A/B/C en orden + Extra opcional; máximo 75 min.
 
 ## 10. Ideas pendientes / posibles siguientes pasos (no pedidas aún)
 

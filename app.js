@@ -8,7 +8,7 @@
 
   /* ================= estado local ================= */
   const KEY = 'gymapp.v2';
-  const blank = () => ({ checks: {}, done: {}, recovery: {}, profile: { weight: 76, height: 180 }, fb: {}, swaps: {}, gates: {}, days: {}, rounds: {} });
+  const blank = () => ({ checks: {}, done: {}, recovery: {}, profile: { weight: 76, height: 180 }, fb: {}, swaps: {}, gates: {}, days: {}, rounds: {}, log: {} });
   let ST;
   try { ST = Object.assign(blank(), JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) { ST = blank(); }
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch (e) { /* sin almacenamiento: la app sigue funcionando */ } };
@@ -17,7 +17,24 @@
 
   let T = PROG.today();
   // el programa recalcula las sesiones con lo que guardaste
-  const sync = () => PROG.setState({ fb: ST.fb, swaps: ST.swaps, gates: ST.gates, days: ST.days, today: T });
+  // días con algo hecho: 'w' entrenamiento, 'r' solo opciones de recuperación
+  function activeDays() {
+    const a = {};
+    Object.keys(ST.recovery).forEach((d) => { if (Object.values(ST.recovery[d]).some(Boolean)) a[d] = 'r'; });
+    [ST.checks, ST.fb].forEach((o) => Object.keys(o).forEach((d) => { if (Object.values(o[d] || {}).some(Boolean)) a[d] = 'w'; }));
+    Object.keys(ST.done).forEach((d) => { if (ST.done[d] && a[d] !== 'r') a[d] = 'w'; });
+    return a;
+  }
+  const sync = () => PROG.setState({ fb: ST.fb, swaps: ST.swaps, gates: ST.gates, days: ST.days, log: ST.log, active: activeDays(), today: T });
+  // al tocar algo de una sesión, ese día queda registrado con el tipo que tenía (A, B, C o Extra)
+  function logDay(date) {
+    const s = PROG.session(date);
+    if (!ST.log[date] && s && (s.kind === 'gym' || s.kind === 'extra')) ST.log[date] = s.type;
+  }
+  function unlogIfEmpty(date) {
+    const any = (o) => Object.values(o[date] || {}).some(Boolean);
+    if (!any(ST.checks) && !any(ST.fb) && !ST.done[date] && !any(ST.rounds)) delete ST.log[date];
+  }
   sync();
   const isDone = (d) => !!ST.done[d];
   const checked = (d, k) => !!(ST.checks[d] || {})[k];
@@ -87,21 +104,28 @@
   }
 
   /* ================= cálculos de avance ================= */
+  // Meta: 3 sesiones (A, B, C) por semana; la semana 1 empezó en jueves, ahí la meta es 2.
+  const PER_WEEK = (w) => (w === 1 ? 2 : 3);
+  const wkMonday = (w) => PROG.addDays(PROG.WEEK1, (w - 1) * 7);
+  function weekDoneCount(w) {
+    let n = 0;
+    for (let i = 0; i < 7; i++) { const d = PROG.addDays(wkMonday(w), i); if (PROG.inProgram(d) && isDone(d) && isWorkout(PROG.session(d))) n++; }
+    return n;
+  }
   function trainingDays(upto) {
+    const wNow = Math.min(Math.max(PROG.weekOf(upto), 1), PROG.TOTAL_WEEKS);
     let planned = 0, done = 0;
-    for (let d = PROG.START; d <= PROG.END && d <= upto; d = PROG.addDays(d, 1)) {
-      const s = PROG.session(d);
-      if (isWorkout(s)) { planned++; if (isDone(d)) done++; }
-    }
+    for (let w = 1; w <= wNow; w++) { const n = weekDoneCount(w); done += n; planned += w < wNow ? PER_WEEK(w) : Math.min(PER_WEEK(w), n); }
     return { planned, done };
   }
-  const totalWorkouts = () => trainingDays(PROG.END).planned;
+  const totalWorkouts = () => { let n = 0; for (let w = 1; w <= PROG.TOTAL_WEEKS; w++) n += PER_WEEK(w); return n; };
+  // semanas seguidas cumpliendo la meta (la semana en curso cuenta solo si ya la cumpliste)
   function streak() {
     let n = 0;
-    for (let d = T; d >= PROG.START; d = PROG.addDays(d, -1)) {
-      const s = PROG.session(d);
-      if (!isWorkout(s)) continue;
-      if (isDone(d)) n++; else if (d < T) break;
+    const wNow = Math.min(PROG.weekOf(T), PROG.TOTAL_WEEKS);
+    for (let w = wNow; w >= 1; w--) {
+      const ok = weekDoneCount(w) >= PER_WEEK(w);
+      if (ok) n++; else if (w < wNow) break;
     }
     return n;
   }
@@ -172,12 +196,11 @@
     const W = 340, H = 130, pl = 22, pr = 6, pt = 10, pb = 22, n = PROG.TOTAL_WEEKS;
     const bw = (W - pl - pr) / n;
     let g = '';
-    for (let v = 0; v <= 5; v += 5) { const y = pt + (1 - v / 5) * (H - pt - pb); g += `<line x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}" class="c-grid"/><text x="${pl - 5}" y="${y + 3.5}" class="c-ax" text-anchor="end">${v}</text>`; }
+    for (let v = 0; v <= 4; v += 2) { const y = pt + (1 - v / 4) * (H - pt - pb); g += `<line x1="${pl}" x2="${W - pr}" y1="${y}" y2="${y}" class="c-grid"/><text x="${pl - 5}" y="${y + 3.5}" class="c-ax" text-anchor="end">${v}</text>`; }
     for (let w = 1; w <= n; w++) {
       const mon = PROG.addDays(PROG.WEEK1, (w - 1) * 7);
-      let planned = 0, done = 0;
-      for (let i = 0; i < 7; i++) { const d = PROG.addDays(mon, i); const s = PROG.session(d); if (isWorkout(s)) { planned++; if (isDone(d)) done++; } }
-      const x = pl + (w - 1) * bw + 2, h = (v) => (v / 5) * (H - pt - pb);
+      const planned = PER_WEEK(w), done = Math.min(4, weekDoneCount(w));
+      const x = pl + (w - 1) * bw + 2, h = (v) => (v / 4) * (H - pt - pb);
       g += `<rect x="${x.toFixed(1)}" y="${(H - pb - h(planned)).toFixed(1)}" width="${(bw - 4).toFixed(1)}" height="${h(planned).toFixed(1)}" rx="2" class="b-plan${PROG.weekOf(T) === w ? ' b-now' : ''}"/>`;
       if (done) g += `<rect x="${x.toFixed(1)}" y="${(H - pb - h(done)).toFixed(1)}" width="${(bw - 4).toFixed(1)}" height="${h(done).toFixed(1)}" rx="2" class="b-done"/>`;
       if (w === 1 || w % 4 === 0) g += `<text x="${(x + (bw - 4) / 2).toFixed(1)}" y="${H - 8}" class="c-ax" text-anchor="middle">S${w}</text>`;
@@ -247,17 +270,17 @@
         <div class="bar"><i style="width:${pct}%"></i></div>
       </section>
       ${today ? `<a class="card today-card" href="#dia/${T}">
-        <div class="today-top"><span class="eyebrow">Today's workout · ${dLong(T)}</span>${isDone(T) ? '<span class="pill pill-ok">Completado</span>' : ''}</div>
+        <div class="today-top"><span class="eyebrow">${today.kind === 'gym' ? 'Te toca' : today.kind === 'extra' ? 'Ya cumpliste tus 3 de la semana' : "Today's workout"} · ${dLong(T)}</span>${isDone(T) ? '<span class="pill pill-ok">Completado</span>' : ''}</div>
         <h2>${esc(today.title)}</h2><p class="muted">${esc(today.sub)}</p>
-        ${isWorkout(today) ? `<div class="meta-row">${piste(today.level, true)}<span>≈${today.duration} min</span>${today.deload ? '<span class="chip">Descarga</span>' : ''}</div><span class="btn btn-primary btn-block">${isDone(T) ? 'Ver entrenamiento' : 'Empezar entrenamiento'}</span>` : ''}
+        ${isWorkout(today) || today.kind === 'extra' ? `<div class="meta-row">${piste(today.level, true)}<span>≈${today.duration} min</span>${today.deload ? '<span class="chip">Descarga</span>' : ''}</div><span class="btn btn-primary btn-block">${isDone(T) ? 'Ver entrenamiento' : 'Empezar entrenamiento'}</span>` : ''}
       </a>` : ''}
       <div class="grid-2">
         <div class="card stat"><span class="eyebrow">Días entrenados</span><b class="num big">${td.done}<small>/${tot}</small></b><span class="muted small">${td.planned ? Math.round((td.done / td.planned) * 100) : 0}% de lo planeado a hoy</span></div>
-        <div class="card stat"><span class="eyebrow">Racha</span><b class="num big">${streak()}</b><span class="muted small">sesiones seguidas</span></div>
+        <div class="card stat"><span class="eyebrow">Esta semana</span><b class="num big">${weekDoneCount(wk)}<small>/${PER_WEEK(wk)}</small></b><span class="muted small">Racha: ${streak()} ${streak() === 1 ? 'semana' : 'semanas'} con la meta</span></div>
       </div>
       ${boxCard()}
       ${impactCard()}
-      ${nxt && nxt.date !== T ? `<a class="card next-card" href="#dia/${nxt.date}"><span class="eyebrow">Próximo entrenamiento</span><div class="next-row"><b>${dLong(nxt.date)}</b>${piste(nxt.level)}</div><span>${esc(nxt.title)}</span></a>` : ''}
+      ${nxt && nxt.date !== T ? `<a class="card next-card" href="#dia/${nxt.date}"><span class="eyebrow">Después te toca</span><div class="next-row"><b>${esc(nxt.title)}</b>${piste(nxt.level)}</div><span class="muted small">Sugerido el ${dLong(nxt.date).toLowerCase()} · o el día que puedas ir</span></a>` : ''}
       <section class="card"><span class="eyebrow">Objetivo de la fase ${ph.n}</span><h3>${esc(ph.name)}</h3>
         <ul class="ticks">${ph.goal.map((g) => `<li>${esc(g)}</li>`).join('')}</ul><p class="muted small">${esc(ph.focus)}</p></section>
       <section class="card"><span class="eyebrow">Próximos hitos</span>
@@ -278,18 +301,19 @@
   function dayStatus(date) {
     const s = PROG.session(date);
     if (!s) return '';
-    if (s.kind === 'rest') return 'rest';
+    if (s.kind === 'rest' || s.kind === 'off') return date < T ? 'rest' : date === T ? 'today' : 'rest';
     if (isDone(date)) return 'done';
     if (date === T) return 'today';
-    if (date < T && isWorkout(s)) return 'missed';
+    if (date < T) return isWorkout(s) || s.kind === 'extra' ? 'missed' : 'rest';
     return 'pending';
   }
-  const STATUS_TXT = { done: 'Completado', today: 'Hoy', missed: 'Sin marcar', pending: 'Pendiente', rest: 'Descanso' };
+  const STATUS_TXT = { done: 'Completado', today: 'Hoy', missed: 'A medias', pending: 'Sugerido', rest: '' };
   function renderCalendar() {
     let body = '';
     if (calMode === 'week') {
       const mon = mondayOf(calCursor), wk = PROG.weekOf(mon);
       body += `<div class="cal-nav"><button class="icon-btn" data-act="cal-prev" aria-label="Semana anterior">‹</button><b>Semana ${wk} · ${dShort(mon)} – ${dShort(PROG.addDays(mon, 6))}</b><button class="icon-btn" data-act="cal-next" aria-label="Semana siguiente">›</button></div>`;
+      body += `<div class="banner"><span>Semana ${wk}: <b>${weekDoneCount(wk)} de ${PER_WEEK(wk)}</b> sesiones. Los días futuros son una sugerencia: ve cuando puedas y la app te da la siguiente en orden (A → B → C).</span></div>`;
       if (PROG.DELOAD_WEEKS.includes(wk)) body += '<div class="banner">Semana de descarga: una serie menos y cargas ~15% más bajas.</div>';
       const stIn = PROG.IMPACT.find((x) => x.n && x.from >= mon && x.from <= PROG.addDays(mon, 6));
       if (stIn) body += `<a class="banner banner-dyn" href="#impacto">${ico('jump')}<span>Ruta de impacto · etapa ${stIn.n}: ${esc(stIn.name.toLowerCase())}, si pasas la prueba.</span></a>`;
@@ -315,7 +339,7 @@
         if (!s) { body += `<span class="mcell out"><b class="num">${i}</b></span>`; continue; }
         body += `<a class="mcell st-${st} kind-${s.kind}${d === T ? ' is-today' : ''}" href="#dia/${d}" aria-label="${dLong(d)}: ${esc(s.title)}"><b class="num">${i}</b><i class="dot"></i>${st === 'done' ? '<i class="tick">✓</i>' : ''}</a>`;
       }
-      body += '</div></div><div class="legend"><span><i class="dot kind-gym"></i>Gimnasio</span><span><i class="dot kind-kb"></i>Kettlebell</span><span><i class="dot kind-recovery"></i>Recuperación</span><span><i class="dot kind-rest"></i>Descanso</span><span>✓ Completado</span></div>';
+      body += '</div></div><div class="legend"><span><i class="dot kind-gym"></i>Sesión A/B/C</span><span><i class="dot kind-extra"></i>Extra</span><span><i class="dot kind-recovery"></i>Recuperación</span><span><i class="dot kind-rest"></i>Descanso</span><span>✓ Completado</span></div>';
     }
     view().innerHTML = `<header class="page-head"><h1 class="display">Calendario</h1>${calSeg(calMode)}</header>${body}`;
   }
@@ -354,12 +378,12 @@
     if (phaseCache[n]) return phaseCache[n];
     const ph = PROG.PHASES[n - 1], map = new Map();
     for (let d = ph.start; d <= ph.end; d = PROG.addDays(d, 1)) {
-      const s = PROG.session(d);
+      const s = PROG.planSession(d);
       if (!isWorkout(s)) continue;
       PROG.allItems(s).forEach((it) => {
         let r = map.get(it.id);
         if (!r) { r = { id: it.id, days: new Set(), first: d, peak: d, type: it.type, rx: it.rx, peakKg: -1 }; map.set(it.id, r); }
-        r.days.add(DOW3[s.dow]);
+        r.days.add(s.type);
         const l = PROG.loadFor(it.id, d, it.type);
         if (l && l.kg > r.peakKg) { r.peakKg = l.kg; r.peak = d; r.type = it.type; }
       });
@@ -371,7 +395,7 @@
     const e = EX.BY[r.id];
     const a = PROG.loadFor(r.id, r.first, r.type), b = PROG.loadFor(r.id, r.peak, r.type);
     const load = a ? (a.kg === b.kg ? a.label : `${a.kg} → ${b.kg} kg · ${a.lb} → ${b.lb} lb`) : '';
-    const days = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'].filter((x) => r.days.has(x)).join(', ');
+    const days = 'Sesión ' + ['A', 'B', 'C'].filter((x) => r.days.has(x)).join(', ');
     return `<button class="px" data-act="ex" data-id="${r.id}"><span class="item-thumb">${thumb(r.id)}</span><span><b>${esc(e.n)}${isNew ? `<span class="badge-new${e.auth ? ' badge-dyn' : ''}">${e.auth ? 'Dinámico' : 'Nuevo'}</span>` : ''}</b>
       <span class="muted small">${esc(days)} · ${esc(r.rx.s + ' × ' + r.rx.r)}</span>${load ? `<span class="small load-txt">${esc(load)}</span>` : ''}</span></button>`;
   }
@@ -497,7 +521,11 @@
     const nav = `<div class="day-nav">${PROG.inProgram(prevD) ? `<a class="icon-btn" href="#dia/${prevD}" aria-label="Día anterior">‹</a>` : '<span></span>'}<span class="muted small">${date === T ? '' : `<a href="#hoy" class="mini-link">Ir a hoy</a> · `}Fase ${s.phase} · Semana ${s.week}</span>${PROG.inProgram(nextD) ? `<a class="icon-btn" href="#dia/${nextD}" aria-label="Día siguiente">›</a>` : '<span></span>'}</div>`;
     const head = `<header class="page-head day-head"><p class="eyebrow">${date === T ? "Today's workout" : 'Entrenamiento'} · ${dLong(date)}</p><h1 class="display">${esc(s.title)}</h1><p class="muted">${esc(s.sub)}</p></header>`;
     if (s.kind === 'recovery') { view().innerHTML = nav + head + recoveryBody(date); return; }
-    if (s.kind === 'rest') { view().innerHTML = nav + head + '<div class="card"><p>Domingo de descanso. Si la rodilla está bien, una caminata corta es opcional. Prioriza sueño, hidratación y comida.</p></div>'; return; }
+    if (s.kind === 'rest' || s.kind === 'off') {
+      const nx = nextWorkout(date > T ? date : T);
+      view().innerHTML = nav + head + `<div class="card"><p>${date < T ? 'No entrenaste este día. Sin problema: la siguiente sesión te espera en orden.' : 'Sin sesión sugerida. Si este día sí puedes ir, abre la app ese día y te da tu siguiente sesión.'}</p>${nx ? `<p class="muted small">Siguiente en orden: <b>${esc(nx.title)}</b></p>` : ''}</div>`;
+      return;
+    }
     if (s.kind === 'travel') {
       view().innerHTML = nav + head + '<div class="banner banner-pro"><b>EVALUACIÓN FINAL POR TRAUMATÓLOGO/FISIOTERAPEUTA ANTES DE REGRESAR AL ESQUÍ.</b></div><div class="card"><p>Llegaste al final del programa. Revisa tu <a href="#ski">Ski readiness</a> y tu <a href="#progreso">avance</a>. ¡Buen viaje!</p></div>';
       return;
@@ -512,6 +540,8 @@
     if (pain) html += `<div class="banner banner-yellow"><span><b>Marcaste molestia el ${dShort(pain)}.</b> Revisa el semáforo: si sigue, hoy no subas pesos y consúltalo con tu fisio.</span></div>`;
     const due = date === T ? PROG.gateDue(date) : null;
     if (due) html += `<section class="card gate-card">${gateBox(due, true)}<a class="mini-link small" href="#impacto">Ver la ruta de impacto completa</a></section>`;
+    if (s.kind === 'extra') html += `<div class="banner">Opcional: ya hiciste tus ${weekDoneCount(s.week)} sesiones de la semana. Hazlo solo si te sientes bien; descansar también suma. También puedes elegir una opción de <a href="#sabado">recuperación</a>.</div>`;
+    else if (date >= T && s.kind === 'gym') html += `<p class="muted small type-note">Te toca la <b>${esc(s.title.split('·')[0].trim())}</b> por orden (A → B → C), el día que vayas. Esta semana llevas ${weekDoneCount(s.week)} de ${PER_WEEK(s.week)}.</p>`;
     if (!s.short) html += dayOpts(s);
     html += KNEE;
     const warm = s.warmShort ? s.warmup.slice(0, 3) : s.warmup;
@@ -655,15 +685,15 @@
 
   /* ---------- mi avance ---------- */
   const KEY_LIFTS = [
-    ['leg_press', 'Leg press', 'lunes · principal'],
-    [['db_rdl', 'rdl'], 'Peso muerto rumano', 'miércoles · mancuernas c/u en oct, barra desde nov'],
-    [['goblet_box', 'goblet_squat', 'box_squat'], 'Sentadilla del viernes', 'goblet con KB → box squat con barra'],
-    ['hip_thrust', 'Hip thrust', 'miércoles · barra'],
-    ['sl_leg_press', 'Single-leg leg press', 'viernes · por pierna'],
-    ['sl_leg_extension', 'Single-leg leg extension', 'lunes · por pierna'],
-    ['sl_rdl', 'Single-leg RDL', 'jueves · KB'],
-    [['chest_press', 'db_bench'], 'Pecho', 'lunes · máquina → mancuernas c/u'],
-    [[['lat_pulldown', 'neutral_pulldown']], 'Jalón al pecho', 'lunes · agarre abierto o neutro']
+    ['leg_press', 'Leg press', 'sesión A · principal'],
+    [['db_rdl', 'rdl'], 'Peso muerto rumano', 'sesión B · mancuernas c/u en oct, barra desde nov'],
+    [['goblet_box', 'goblet_squat', 'box_squat'], 'Sentadilla', 'sesión C · goblet con KB → box squat con barra'],
+    ['hip_thrust', 'Hip thrust', 'sesión B · barra'],
+    ['sl_leg_press', 'Single-leg leg press', 'sesión C · por pierna'],
+    ['sl_leg_extension', 'Single-leg leg extension', 'sesión A · por pierna'],
+    ['sl_rdl', 'Single-leg RDL', 'sesión C · KB'],
+    [['chest_press', 'db_bench'], 'Pecho', 'sesión A · máquina → mancuernas c/u'],
+    [[['lat_pulldown', 'neutral_pulldown']], 'Jalón al pecho', 'sesión A · agarre abierto o neutro']
   ];
   function renderProgress() {
     const td = trainingDays(T), tot = totalWorkouts();
@@ -785,19 +815,21 @@
     if (a === 'close') closeSheet();
     else if (a === 'ex') showExercise(t.dataset.id, date, t.dataset.code);
     else if (a === 'check') {
+      logDay(date);
       const c = Object.assign({}, ST.checks[date]);
       c[t.dataset.key] = !c[t.dataset.key];
       ST.checks[date] = c;
       const s = PROG.session(date);
-      if (isWorkout(s) && !ST.done[date] && PROG.allItems(s).every((i) => c[i.code])) { ST.done[date] = true; toast('¡Sesión completada!'); }
-      save(); render();
-    } else if (a === 'finish') { ST.done[date] = true; save(); toast('¡Sesión completada!'); render(); }
-    else if (a === 'undo-finish') { delete ST.done[date]; save(); render(); }
+      if ((isWorkout(s) || s.kind === 'extra') && !ST.done[date] && PROG.allItems(s).every((i) => c[i.code])) { ST.done[date] = true; toast('¡Sesión completada!'); }
+      unlogIfEmpty(date); save(); sync(); render();
+    } else if (a === 'finish') { logDay(date); ST.done[date] = true; save(); sync(); toast('¡Sesión completada!'); render(); }
+    else if (a === 'undo-finish') { delete ST.done[date]; unlogIfEmpty(date); save(); sync(); render(); }
     else if (a === 'timer-stop') stopTimer();
     else if (a === 'timer-add') { if (TM) { TM.end += 15000; TM.last = null; } }
     else if (a === 'timer-skip') { if (TM) TM.end = Date.now(); }
     else if (a === 'go') { const it = findItem(date, t.dataset.code); if (it) runTimer(segsFor(it)); }
     else if (a === 'round' || a === 'round-reset') {
+      logDay(date);
       const b = t.dataset.block, r = Object.assign({}, ST.rounds[date]);
       if (a === 'round-reset') delete r[b];
       else {
@@ -812,10 +844,11 @@
           stopTimer();
         } else runTimer([{ l: `Descanso · vuelta ${r[b] + 1}/${sets}`, s: +t.dataset.sec, k: 'rest' }]);
       }
-      ST.rounds[date] = r; save(); render();
+      ST.rounds[date] = r; unlogIfEmpty(date); save(); sync(); render();
     } else if (a === 'fb' || a === 'kg') {
       const it = findItem(date, t.dataset.code);
       if (!it) return;
+      logDay(date);
       const day = Object.assign({}, ST.fb[date]), cur = Object.assign({}, day[it.code]);
       const base = { id: it.id, type: it.type, sug: it.load ? it.load.kg : null };
       if (a === 'fb') {
@@ -863,13 +896,13 @@
       const r = Object.assign({}, ST.recovery[date]); r[t.dataset.opt] = !r[t.dataset.opt];
       ST.recovery[date] = r;
       if (Object.values(r).some(Boolean)) ST.done[date] = true; else delete ST.done[date];
-      save(); render();
+      save(); sync(); render();
     } else if (a === 'play') {
       if (stopAnim) { closeAnim(); t.innerHTML = ico('play'); }
       else if (curEx) { stopAnim = FIG.animate($('#anim'), EX.BY[curEx].fig); t.innerHTML = ico('pause'); }
     } else if (a === 'reset') {
       if (!confirmReset) { confirmReset = true; renderSettings(); return; }
-      ST.checks = {}; ST.done = {}; ST.recovery = {}; ST.fb = {}; ST.swaps = {}; ST.gates = {}; ST.days = {}; ST.rounds = {}; confirmReset = false; save(); sync(); toast('Marcas borradas'); renderSettings();
+      ST.checks = {}; ST.done = {}; ST.recovery = {}; ST.fb = {}; ST.swaps = {}; ST.gates = {}; ST.days = {}; ST.rounds = {}; ST.log = {}; confirmReset = false; save(); sync(); toast('Marcas borradas'); renderSettings();
     }
   });
   document.addEventListener('input', (e) => {
